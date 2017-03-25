@@ -3,7 +3,10 @@ from miditime.miditime import MIDITime
 
 
 # MIDITime.save_midi() method altered to allow many instruments
-def save_midi(self: MIDITime, instruments_per_channel: [int]):
+def save_midi(self: MIDITime, instruments_per_channel: [int] = None):
+    if instruments_per_channel is None:
+        instruments_per_channel = []
+
     # Create the MIDIFile Object with 1 track
     self.MIDIFile = MIDIFile(len(self.tracks))
 

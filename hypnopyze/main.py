@@ -1,4 +1,4 @@
-from hypnopyze.test import test
+from hypnopyze.test import *
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -8,4 +8,5 @@ parser.parse_args()
 
 def main():
     print("Test")
-    test()
+    test_scales()
+    test_compose()
