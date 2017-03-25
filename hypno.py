@@ -1,13 +1,4 @@
-import hypnopyze
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("seed")
-parser.parse_args()
-
-
-def main():
-    print("Test")
-
+from hypnopyze.main import main
 
 if __name__ == "__main__":
     main()
