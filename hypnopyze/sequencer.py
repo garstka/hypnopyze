@@ -19,8 +19,6 @@ class Sequencer:
         self.__perturb_velocity_cap = perturb_velocity_cap
         self.__notes = []
         self.__t = 0
-        self.__relative = False
-        self.__relative_to = 0
 
     # Moves the next bar's position to another time point.
     def set_time(self, time):
@@ -34,11 +32,6 @@ class Sequencer:
     # starting from the next bar.
     def set_channel(self, channel: int):
         self.__channel = channel
-
-    # Sets the next pattern's indices to be treated as relative to this note.
-    # def set_relative(self, note: Note):
-    #    self.__relative = True
-    #    self.__relative_to = note.midi_note()
 
     # Returns true, if the pattern is compatible
     def compatible(self, pattern: Pattern):
@@ -104,10 +97,6 @@ class Sequencer:
             if is_silence(index):
                 t += full_step  # update the time
                 continue
-
-            # convert to absolute note index if necessary
-            # if self.__relative:
-            #    index += self.__relative_to
 
             # perturb the velocity if required
             if perturb_range:

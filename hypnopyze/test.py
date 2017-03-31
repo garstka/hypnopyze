@@ -1,7 +1,6 @@
 from miditime.miditime import MIDITime
 from hypnopyze.save_midi import save_midi
 from hypnopyze.scales import *
-from hypnopyze.instruments import *
 from hypnopyze.drums import *
 from hypnopyze.sequencer import *
 from hypnopyze.patterns import *
@@ -81,8 +80,6 @@ def test_scales(out="out.mid", bpm=120):
 def test_drums_simple(out="out.mid", bpm=120, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    beats_per_bar = 5
-
     start = 0
     end = 120
 
@@ -114,7 +111,7 @@ def test_drums_simple(out="out.mid", bpm=120, beats_per_bar=5):
 def test_sequencer_simple(out="out.mid", bpm=120, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=5, time_step=1,
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
                     perturb_velocity_cap=20)
 
     start = 0
