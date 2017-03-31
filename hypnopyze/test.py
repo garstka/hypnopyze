@@ -1,9 +1,8 @@
 from miditime.miditime import MIDITime
-from hypnopyze.save_midi import save_midi
-from hypnopyze.scales import *
+
 from hypnopyze.drums import *
+from hypnopyze.save_midi import save_midi
 from hypnopyze.sequencer import *
-from hypnopyze.patterns import *
 
 
 # Tests the scale walking capability.
@@ -122,27 +121,26 @@ def test_sequencer_simple(out="out.mid", bpm=120, beats_per_bar=5):
     pd = [1, 1, 1, 1, 1]
     pattern = Pattern("drum", len(pi), pi, pv, pd, repeatable=True)
 
-    seq.set_time(start)
-    seq.set_channel(CHANNEL_DRUMS)
+    seq.time = start
+    seq.channel = CHANNEL_DRUMS
 
     if not seq.compatible(pattern):
         print("Pattern incompatible")
         return
 
-    while seq.time() < end:
+    while seq.time < end:
         if not seq.append(pattern):
             print("Couldn't append")
 
     # print(seq.notes())
 
-    mt.add_track(seq.notes())
+    mt.add_track(seq.notes)
 
     save_midi(mt)
 
 
 # Tests the sequencer using relative and time-scaled note pattern
 def test_sequencer_relative(out="out.mid", bpm=120, beats_per_bar=10):
-
     mt = MIDITime(bpm, out)
 
     seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
@@ -160,30 +158,87 @@ def test_sequencer_relative(out="out.mid", bpm=120, beats_per_bar=10):
     # convert to sounds
     walker = ScaleWalker(Scale(ScaleBlueprint([A, C, D, E, G]), E))
 
-    print(pattern.indices())
+    print(pattern.indices)
     pattern = pattern.sound_pattern_from_this_walk(walker)
-    print(pattern.indices())
+    print(pattern.indices)
 
-    seq.set_time(start)
+    seq.time = start
 
     if not seq.compatible(pattern):
         print("Pattern incompatible")
         return
 
-    while seq.time() < end:
+    while seq.time < end:
         if not seq.append(pattern):
             print("Couldn't append")
 
-    print(seq.notes())
+    print(seq.notes)
 
-    mt.add_track(seq.notes())
+    mt.add_track(seq.notes)
+
+    save_midi(mt)
+
+
+# Tests pattern generation from directions
+def test_generator(out="out.mid", bpm=120, beats_per_bar=5):
+    mt = MIDITime(bpm, out)
+
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
+                    perturb_velocity_cap=10)
+
+    prng = RandomState(75123481)
+
+    start = 0
+    end = 120
+
+    scale = [A, C, D, E, G]
+
+    # create the pattern as directions for a walk within a scale
+    pi = [STAY, -1, UP, -1, UP, DOWN, ROOT_DOWN, -1, -1, NEXT_ROOT]
+    pv = [H, 0, M, 0, H, H, M, 0, 0, M]
+    pd = [1, 1, 1, 3, 1, 1, 3, 0, 0, 1]
+    pattern0 = Pattern("piano1", len(pi) / 2, pi, pv, pd, repeatable=True)
+    patterns = [pattern0.walk_from_these_directions(len(scale), prng) for i in
+                range(1, 10)]
+
+    patterns = [p for p in patterns if p]
+    print("available: ", len(patterns))
+    if not patterns:
+        print("Couldn't generate any patterns from these directions.")
+        return
+
+    for (i, p) in enumerate(patterns):
+        print(i, ": ", p.indices)
+
+    pattern = patterns[0]
+
+    # convert to sounds
+    walker = ScaleWalker(Scale(ScaleBlueprint(scale), E))
+
+    print(pattern.indices)
+    pattern = pattern.sound_pattern_from_this_walk(walker)
+    print(pattern.indices)
+
+    seq.time = start
+
+    if not seq.compatible(pattern):
+        print("Pattern incompatible")
+        return
+
+    while seq.time < end:
+        if not seq.append(pattern):
+            print("Couldn't append")
+
+    print(seq.notes)
+
+    mt.add_track(seq.notes)
 
     save_midi(mt)
 
 
 def test_compose():
-
     test_scales("test0.mid")
     test_drums_simple("test1.mid")
     test_sequencer_simple("test2.mid")
     test_sequencer_relative("test3.mid")
+    test_generator("test4.mid")
