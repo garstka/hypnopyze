@@ -125,7 +125,6 @@ class Sequencer:
             duration *= full_step
 
             # append the note
-            # print(self.__notes)
             self.__notes.append([[t, index, velocity, duration],
                                  self.channel])
 

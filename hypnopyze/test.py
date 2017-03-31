@@ -33,31 +33,31 @@ def test_scales(out="out.mid", bpm=120):
 
     v = 127
 
-    n = scalewlk.current().midi_note()
+    n = scalewlk.current.midi_note
     t = 0
     d = 2
     notes.append([t, n, v, d])
 
     scalewlk.walk(1)
-    n = scalewlk.current().midi_note()
+    n = scalewlk.current.midi_note
     t += 2
     d = 3
     notes.append([t, n, v, d])
 
     scalewlk.walk(2)
-    n = scalewlk.current().midi_note()
+    n = scalewlk.current.midi_note
     t += 3
     d = 3
     notes.append([t, n, v, d])
 
     scalewlk.walk(-4)
-    n = scalewlk.current().midi_note()
+    n = scalewlk.current.midi_note
     t += 3
     d = 5
     notes.append([t, n, v, d])
 
     scalewlk.walk(1)
-    n = scalewlk.current().midi_note()
+    n = scalewlk.current.midi_note
     t += 5
     d = 6
     notes.append([t, n, v, d])
@@ -196,10 +196,10 @@ def test_generator(out="out.mid", bpm=120, beats_per_bar=5):
     # create the pattern as directions for a walk within a scale
     pi = [STAY, -1, UP, -1, UP, DOWN, ROOT_DOWN, -1, -1, NEXT_ROOT]
     pv = [H, 0, M, 0, H, H, M, 0, 0, M]
-    pd = [1, 1, 1, 3, 1, 1, 3, 0, 0, 1]
-    pattern0 = Pattern("piano1", len(pi) / 2, pi, pv, pd, repeatable=True)
-    patterns = [pattern0.walk_from_these_directions(len(scale), prng) for i in
-                range(1, 10)]
+    pd = [2, 1, 1, 3, 1, 1, 3, 0, 0, 1]
+    pattern0 = Pattern("piano1", int(len(pi) / 2), pi, pv, pd, repeatable=True)
+    patterns = [pattern0.walk_from_these_directions(len(scale), prng)
+                for _ in range(1, 10)]
 
     patterns = [p for p in patterns if p]
     print("available: ", len(patterns))
@@ -214,10 +214,7 @@ def test_generator(out="out.mid", bpm=120, beats_per_bar=5):
 
     # convert to sounds
     walker = ScaleWalker(Scale(ScaleBlueprint(scale), E))
-
-    print(pattern.indices)
     pattern = pattern.sound_pattern_from_this_walk(walker)
-    print(pattern.indices)
 
     seq.time = start
 

@@ -1,15 +1,15 @@
 from hypnopyze.notes import *
+from typing import List
 
 
 # Acts as a blueprint for a full scale.
 class ScaleBlueprint:
-
     # Constructs from an ascending list of notes, e.g. [E,G,A,B,D],
     # where the first one is the root
     #
     # Notes shouldn't span more than one octave, e.g. [E,G,E,F] are not
     # valid base_notes. The scale will then be reduced to [E,G]
-    def __init__(self, base_notes: [int]):
+    def __init__(self, base_notes: List[int]):
 
         if len(base_notes) == 0:
             self.__offsets = []
@@ -24,22 +24,24 @@ class ScaleBlueprint:
             notes.append(prev)
 
         # convert notes to offsets
-        start_root_midi = start_root.midi_note()
-        self.__offsets = [start_root_midi - i.midi_note() for i in notes]
+        start_root_midi = start_root.midi_note
+        self.__offsets = [start_root_midi - i.midi_note for i in notes]
 
         # discard notes more than 1 octave apart from root
         self.__offsets = [i for i in self.__offsets if i < BASE_NOTE_COUNT]
 
     # Returns the offsets
-    def offsets(self) -> [int]:
+    @property
+    def offsets(self) -> List[int]:
         return self.__offsets
 
     # Returns true, if a valid scale blueprint
+    @property
     def good(self):
         return bool(self.__offsets)
 
     def __bool__(self):
-        return self.good()
+        return self.good
 
 
 # An ascending set of notes that fit together, spanning all octaves.
@@ -54,27 +56,30 @@ class Scale:
         for octave in range(OCTAVE_0 - 1, OCTAVE_COUNT + 1):
             root_in_octave = Note(octave, base_root_note)
             notes.extend([root_in_octave.note_by_offset(offset)
-                          for offset in blueprint.offsets()])
+                          for offset in blueprint.offsets])
 
         # make sure all are valid and unique
         self.__base_root_note = base_root_note
-        self.__notes = list(set([note for note in notes if note.good()]))
+        self.__notes = list(set([note for note in notes if note.good]))
         self.__notes.sort()
 
     # Returns the base root note, e.g. C
+    @property
     def base_root(self):
         return self.__base_root_note
 
     # Returns all notes
+    @property
     def notes(self):
         return self.__notes
 
     # Returns true, if a valid scale
+    @property
     def good(self):
         return bool(self.__notes)
 
     def __bool__(self):
-        return self.good()
+        return self.good
 
 
 # Helps with walking a scale up and down
@@ -91,13 +96,13 @@ class ScaleWalker:
         self.jump(DEFAULT_OCTAVE)
 
     # Jumps to the root in this octave and sets it as the starting point.
-    # If the corresponding note is not good(), this object ceases to be
-    # good(), until a valid jump() is performed.
+    # If the corresponding note is not good, this object ceases to be
+    # good, until a valid jump() is performed.
     def jump(self, octave: int):
-        root = Note(octave, self.__scale.base_root())
+        root = Note(octave, self.__scale.base_root)
 
         try:
-            self.__start_index = self.__scale.notes().index(root)
+            self.__start_index = self.__scale.notes.index(root)
             self.__current_index = self.__start_index
         except ValueError:
             self.__start_index = -1
@@ -110,22 +115,24 @@ class ScaleWalker:
 
     # Returns true, if walking the scale up (offset > 0) or down (offset < 0)
     # would produce a valid note.
-    def range(self, offset):
-        return 0 <= self.__current_index + offset < len(self.__scale.notes())
+    def range(self, offset) -> bool:
+        return 0 <= self.__current_index + offset < len(self.__scale.notes)
 
     # Walks the scale up (offset > 0), or down (offset < 0).
     def walk(self, offset: int):
         self.__current_index += offset
 
     # Returns the current note.
-    def current(self):
+    @property
+    def current(self) -> Note:
         if not self:
             return Note(-1, -1)
-        return self.__scale.notes()[self.__current_index]
+        return self.__scale.notes[self.__current_index]
 
     # Returns true if currently on a valid note.
-    def good(self):
-        return 0 <= self.__current_index < len(self.__scale.notes())
+    @property
+    def good(self) -> bool:
+        return 0 <= self.__current_index < len(self.__scale.notes)
 
     def __bool__(self):
-        return self.good()
+        return self.good

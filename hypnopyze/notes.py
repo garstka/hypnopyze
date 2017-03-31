@@ -1,4 +1,3 @@
-
 # base notes
 
 C = 0
@@ -41,33 +40,31 @@ FULL_OCTAVE_COUNT = 10
 OCTAVE_10 = 10
 OCTAVE_COUNT = 11
 
-
 DEFAULT_OCTAVE = OCTAVE_5
 
 
 # Note in an octave.
-# Note must be checked if it's good() before being used.
+# Note must be checked if it's good before being used.
 class Note:
-
     # Constructs from octave number and base note.
     def __init__(self, octave: int, base_note: int):
         self.__midi_note = octave * BASE_NOTE_COUNT + base_note
 
     # Returns the next note below that corresponds to base_note.
-    def note_below(self, base_note):
-        if base_note < self.base_note():  # if in the same octave
-            return Note(self.octave(), base_note)
+    def note_below(self, base_note: int):
+        if base_note < self.base_note:  # if in the same octave
+            return Note(self.octave, base_note)
 
         # in the previous octave
-        return Note(self.octave() - 1, base_note)
+        return Note(self.octave - 1, base_note)
 
     # Returns the next note above that corresponds to base_note.
     def note_above(self, base_note):
-        if self.base_note() < base_note:  # if in the same octave
-            return Note(self.octave(), base_note)
+        if self.base_note < base_note:  # if in the same octave
+            return Note(self.octave, base_note)
 
         # in the next octave
-        return Note(self.octave() + 1, base_note)
+        return Note(self.octave + 1, base_note)
 
     # Returns the note corresponding to an offset by some half-steps
     # (can be negative).
@@ -76,18 +73,22 @@ class Note:
         return Note(new_midi // BASE_NOTE_COUNT, new_midi % BASE_NOTE_COUNT)
 
     # Returns true, if a correct midi note.
+    @property
     def good(self):
-        return MIN_NOTE <= self.__midi_note <= MAX_NOTE
+        return MIN_NOTE <= self.midi_note <= MAX_NOTE
 
     # Returns the note value usable for midi files.
+    @property
     def midi_note(self):
         return self.__midi_note
 
     # Returns the base note
+    @property
     def base_note(self):
         return self.__midi_note % BASE_NOTE_COUNT
 
     # Returns the octave
+    @property
     def octave(self):
         return self.__midi_note // BASE_NOTE_COUNT
 
@@ -101,5 +102,4 @@ class Note:
         return self.__midi_note
 
     def __bool__(self):
-        return self.good()
-
+        return self.good

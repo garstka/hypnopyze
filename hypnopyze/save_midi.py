@@ -2,6 +2,18 @@ from midiutil.MidiFile3 import MIDIFile
 from miditime.miditime import MIDITime
 
 
+def add_note(self: MIDITime, track, channel, note):
+    time = note[0]
+    pitch = note[1]
+    velocity = note[2]
+    duration = note[3]
+
+    # print(pitch, time, duration, velocity)
+
+    # Now add the note.
+    self.MIDIFile.addNote(track, channel, pitch, time, duration, velocity)
+
+
 # MIDITime.save_midi() method altered to allow many instruments
 def save_midi(self: MIDITime, instruments_per_channel: [int] = None):
     if instruments_per_channel is None:
@@ -30,7 +42,7 @@ def save_midi(self: MIDITime, instruments_per_channel: [int] = None):
             else:
                 note = n
                 channel = 0
-            self.add_note(track, channel, note)
+            add_note(self, track, channel, note)
 
     # And write it to disk.
     binfile = open(self.outfile, 'wb')

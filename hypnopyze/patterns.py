@@ -14,6 +14,16 @@ def is_silence(note):
     return not (0 <= note <= MAX_NOTE)
 
 
+# Returns true, if the note represents silence in a scale walk.
+def is_silence_walk(index):
+    return index == SILENCE
+
+
+# Returns true, if the note represents silence in a direction list.
+def is_silence_directions(index):
+    return not STAY <= index <= NEXT_DOWN
+
+
 # directions for generating patterns using scales
 
 STAY = 0  # play the previous note again
@@ -140,8 +150,10 @@ class Pattern:
             return abs(prng.binomial(2 * max_val, 0.5) - max_val)
 
         def rand_nonzero(max_val):
-            result = rand(top - bottom)
-            return result if result != 0 else 1
+            result = 0
+            while result == 0:
+                result = rand(max_val)
+            return result
 
         for i in self.indices:
 
@@ -171,18 +183,22 @@ class Pattern:
                 if bottom > top:
                     return None  # can be fixed, perhaps
 
-                off = rand_nonzero(top - bottom)
+                off = rand_nonzero(top - bottom + 1)
                 current_offset = bottom - 1 + off
+                if not bottom <= current_offset <= top:
+                    print("Something's wrong")
 
             elif i == DOWN:  # go down (staying within the same octave)
 
                 top = current_offset - 1
-                bottom = prev_root() + 1
+                bottom = current_root() + 1
                 if bottom > top:
                     return None  # can be fixed, perhaps
 
-                off = rand_nonzero(top - bottom)
+                off = rand_nonzero(top - bottom + 1)
                 current_offset = top + 1 - off
+                if not bottom <= current_offset <= top:
+                    print("Something's wrong")
 
             elif i == ROOT:  # play the current root
                 current_offset = current_root()
@@ -198,8 +214,16 @@ class Pattern:
                 if bottom > top:
                     return None  # can be fixed, perhaps
 
-                off = rand_nonzero(top - bottom)
+                off = rand_nonzero(top - bottom + 1)
+                print("____")
+                print("current_offset: ", current_root())
+                print("Top: ", top)
+                print("Bottom: ", bottom)
+                print("Off: ", off)
                 current_offset = top + 1 - off
+                print("current_offset: ", current_offset)
+                if not bottom <= current_offset <= top:
+                    print("Something's wrong")
 
             else:
                 new_indices.append(SILENCE)
@@ -212,7 +236,7 @@ class Pattern:
         last_index = 0
         for i in range(0, len(new_indices)):
             this_index = new_indices[i]
-            
+
             if is_silence(this_index):
                 continue
 
@@ -230,12 +254,12 @@ class Pattern:
         new_indices = []
         for i in self.indices:
 
-            if is_silence(i):
+            if is_silence_walk(i):
                 new_indices.append(i)
                 continue
 
             scale_walker.walk(i)
-            new_indices.append(scale_walker.current().midi_note())
+            new_indices.append(scale_walker.current.midi_note)
 
         return Pattern(self.name,
                        self.min_beats_per_bar,
