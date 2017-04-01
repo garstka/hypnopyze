@@ -12,51 +12,43 @@ class Drummer:
                  start_time: int = 0):
 
         style = StyleManager().style
-        self.beats_per_bar = style.beats_per_bar_given_res(style.drums_res)
+        self.beats_per_bar = style.beats_per_bar
         self.bar_group = style.bar_group
-        self.time_step = style.time_step_given_res(style.drums_res)
         self.__t = start_time if start_time >= 0 else 0
 
         # bass - beat or timing element with basic pulse patterns
-        self.seq_bass = Sequencer(self.beats_per_bar, self.time_step,
-                                  style.bass_perturb)
+        self.seq_bass = Sequencer(self.beats_per_bar, style.bass_perturb)
         self.seq_bass.channel = CHANNEL_DRUMS
         self.seq_bass.time = start_time
 
         # stick - intro
-        self.seq_stick = Sequencer(self.beats_per_bar, self.time_step,
-                                   style.stick_perturb)
+        self.seq_stick = Sequencer(self.beats_per_bar, style.stick_perturb)
         self.seq_stick.channel = CHANNEL_DRUMS
         self.seq_stick.time = start_time
 
         # snare - regular accents, fills
-        self.seq_snare = Sequencer(self.beats_per_bar, self.time_step,
-                                   style.snare_perturb)
+        self.seq_snare = Sequencer(self.beats_per_bar, style.snare_perturb)
         self.seq_snare.channel = CHANNEL_DRUMS
         self.seq_snare.time = start_time
 
         # tom - fills and solos
-        self.seq_toms = Sequencer(self.beats_per_bar, self.time_step,
-                                  style.toms_perturb)
+        self.seq_toms = Sequencer(self.beats_per_bar, style.toms_perturb)
         self.seq_toms.channel = CHANNEL_DRUMS
         self.seq_toms.time = start_time
 
         # ride - constant-rhythm pattern
         # & hi-hat - similar to ride, not at the same time
-        self.seq_hi_ride = Sequencer(self.beats_per_bar, self.time_step,
-                                     style.ride_perturb)
+        self.seq_hi_ride = Sequencer(self.beats_per_bar, style.ride_perturb)
         self.seq_hi_ride.channel = CHANNEL_DRUMS
         self.seq_hi_ride.time = start_time
 
         # crash - accent markers, major changes
-        self.seq_crash = Sequencer(self.beats_per_bar, self.time_step,
-                                   style.crash_perturb)
+        self.seq_crash = Sequencer(self.beats_per_bar, style.crash_perturb)
         self.seq_crash.channel = CHANNEL_DRUMS
         self.seq_crash.time = start_time
 
         # mixed, sequential
-        self.seq_mixed = Sequencer(self.beats_per_bar, self.time_step,
-                                   style.mixed_perturb)
+        self.seq_mixed = Sequencer(self.beats_per_bar, style.mixed_perturb)
         self.seq_mixed.channel = CHANNEL_DRUMS
         self.seq_mixed.time = start_time
 
@@ -74,9 +66,8 @@ class Drummer:
         def rand_mixed():
             return patterns_mixed[prng.choice(len(patterns_mixed))]
 
-        total_time = bar_groups * self.bar_group * \
-                     self.beats_per_bar * self.time_step
-        
+        total_time = bar_groups * self.bar_group * self.beats_per_bar
+
         bass = self.seq_bass
         while bass.time < total_time:
             if not patterns_bass:

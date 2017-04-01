@@ -31,14 +31,11 @@ def set_style_54():
 
     style.base_beats_per_bar = 5
 
-    style.lead_res = 2
-    style.rhythm_res = 4
-    style.drums_res = 4
+    style.resolution = 4
 
     style.key = E
 
-    # style.bpm = 240
-    style.bpm = 120
+    style.bpm = 240
     style.bar_group = 4
 
     sm.style = style
@@ -133,4 +130,10 @@ def set_style_54():
 
     b.bars = 2
     b.i = [LowFloorTom, ElectricSnare] * 10
+
+    # for testing bar lengths:
+    # b.i = []
+    # b.i.append(LowFloorTom)
+    # b.i.extend(([0] * 18))
+    # b.i.append(ElectricSnare)
     build()

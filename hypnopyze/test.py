@@ -112,8 +112,7 @@ def test_drums_simple(out="out.mid", bpm=120, beats_per_bar=5):
 def test_sequencer_simple(out="out.mid", bpm=120, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=20)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=20)
 
     start = 0
     end = 120
@@ -145,8 +144,7 @@ def test_sequencer_simple(out="out.mid", bpm=120, beats_per_bar=5):
 def test_sequencer_relative(out="out.mid", bpm=120, beats_per_bar=10):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=10)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=10)
 
     start = 0
     end = 120
@@ -185,8 +183,7 @@ def test_sequencer_relative(out="out.mid", bpm=120, beats_per_bar=10):
 def test_generator(out="out.mid", bpm=120, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=10)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=10)
 
     prng = RandomState(75123481)
 
@@ -239,8 +236,7 @@ def test_generator(out="out.mid", bpm=120, beats_per_bar=5):
 def test_different_drum_sounds(out="out.mid", bpm=120, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=2,
-                    perturb_velocity_cap=10)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=10)
 
     start = 0
     end = 120
@@ -320,8 +316,7 @@ def test_different_drum_sounds(out="out.mid", bpm=120, beats_per_bar=5):
 def test_useful_drum_sounds(out="out.mid", bpm=160, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=10)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=10)
 
     start = 0
     end = 120
@@ -421,8 +416,7 @@ def test_useful_drum_sounds(out="out.mid", bpm=160, beats_per_bar=5):
 def test_drummer_sounds(out="out.mid", bpm=120, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=30)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=30)
 
     start = 0
     end = 120
@@ -517,8 +511,7 @@ def test_drummer_sounds(out="out.mid", bpm=120, beats_per_bar=5):
 def test_tom_sounds(out="out.mid", bpm=240, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=30)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=30)
 
     start = 0
     end = 120
@@ -582,8 +575,7 @@ def test_tom_sounds(out="out.mid", bpm=240, beats_per_bar=5):
 def test_hi_ride_sounds(out="out.mid", bpm=180, beats_per_bar=5):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=30)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=30)
 
     start = 0
     end = 120
@@ -637,8 +629,7 @@ def test_hi_ride_sounds(out="out.mid", bpm=180, beats_per_bar=5):
 def test_fill_sounds(out="out.mid", bpm=240, beats_per_bar=4):
     mt = MIDITime(bpm, out)
 
-    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
-                    perturb_velocity_cap=30)
+    seq = Sequencer(beats_per_bar=beats_per_bar, perturb_velocity_cap=30)
 
     start = 0
     end = 120

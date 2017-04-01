@@ -11,7 +11,6 @@ class Sequencer:
     # - perturb_velocity_cap - randomly perturbs the base velocities by +- this
     def __init__(self,
                  beats_per_bar: int,
-                 time_step: int = 1,
                  perturb_velocity_cap: int = 0):
 
         # The midi channel to use. Any change takes effect from the next bar.
@@ -22,9 +21,6 @@ class Sequencer:
 
         # How much to randomly perturb velocities
         self.perturb_velocity_cap = perturb_velocity_cap
-
-        # MIDI beats per one time step
-        self.__time_step = time_step if time_step > 0 else 1
 
         # The output notes
         self.__notes = []
@@ -91,15 +87,6 @@ class Sequencer:
         return pattern.repeatable \
                and self.beats_per_bar % pattern.min_beats_per_bar == 0
 
-        # If compatible, returns the number of bars the pattern will take up.
-        # def bar_count(self, pattern: Pattern) -> int:
-        # return int(ceil(pattern.beats / pattern.min_beats_per_bar)) * \
-        #      self.time_scale(pattern)
-
-        # return int(ceil(self.time_scale(pattern) * pattern.beats
-        #                / self.beats_per_bar))
-        # return self.time_scale(pattern) * pattern.bars
-
     # Appends the pattern at the current time point, if it's compatible.
     # Returns the number of bars appended
     def append(self, pattern: Pattern) -> int:
@@ -121,7 +108,7 @@ class Sequencer:
         perturb_range_len = len(perturb_range)
         p = pattern
         t = self.__t
-        full_step = self.__time_step * time_scale
+        full_step = time_scale
         for _ in range(0, repeats):
             for (index, velocity, duration) in p.ivd:
 

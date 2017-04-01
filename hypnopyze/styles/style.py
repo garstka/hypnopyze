@@ -23,11 +23,9 @@ class Style:
 
         self.base_beats_per_bar = 5  # base beats per bar
 
-        # multipliers
+        # multiplier
 
-        self.lead_res = 2
-        self.rhythm_res = 4
-        self.drums_res = 4
+        self.resolution = 4
 
         #
         # key
@@ -65,23 +63,9 @@ class Style:
     # Returns the actual beats per bar.
     @property
     def beats_per_bar(self):
-        return self.base_beats_per_bar * self.max_res
+        return self.base_beats_per_bar * self.resolution
 
     # Returns the number of bars per minute.
     @property
     def bars_per_minute(self):
         return self.bpm / self.beats_per_bar
-
-    # Returns the time step size for the given target resolution.
-    def time_step_given_res(self, target_res):
-        return self.max_res // target_res
-
-    # Returns the target beats per bar for the given the target resolution.
-    def beats_per_bar_given_res(self, target_res):
-        return self.base_beats_per_bar * target_res
-
-    # Maximum resolution for any instrument.
-    @property
-    def max_res(self):
-        return max(self.lead_res, self.rhythm_res,
-                   self.drums_res)
