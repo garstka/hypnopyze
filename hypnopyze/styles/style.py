@@ -1,5 +1,5 @@
-from hypnopyze.notes import E
-from hypnopyze.instruments import BrightAcousticPiano, AcousticBass
+from hypnopyze.notes import *
+from hypnopyze.instruments import *
 from hypnopyze.drums import CHANNEL_DRUMS
 
 
@@ -14,7 +14,7 @@ class Style:
         self.use_rhythm = False
         self.use_drums = True
 
-        self.lead = BrightAcousticPiano
+        self.lead = AcousticGrandPiano
         self.rhythm = AcousticBass
 
         #
@@ -69,3 +69,8 @@ class Style:
     @property
     def bars_per_minute(self):
         return self.bpm / self.beats_per_bar
+
+    # Returns the array [instrument_channel_0, instrument_channel_1, ...]
+    @property
+    def instruments_per_channel(self):
+        return [self.lead, self.rhythm]

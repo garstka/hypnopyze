@@ -46,6 +46,7 @@ class PatternBuilder:
 
         self.key = E
         self.scale = MajorScale
+        self.octaves = [DEFAULT_OCTAVE]
 
         # set this to None if the scale changes
         self.walker = None
@@ -86,9 +87,11 @@ class PatternBuilder:
         sounds = []
 
         if self.use_directions or self.use_walks:
-            for walk in walks:
-                self.walker.back()
-                sounds.append(walk.sound_pattern_from_this_walk(self.walker))
+            for octave in self.octaves:
+                for walk in walks:
+                    self.walker.jump(octave)
+                    sounds.append(
+                        walk.sound_pattern_from_this_walk(self.walker))
         else:
             sounds = [base_pattern]
 

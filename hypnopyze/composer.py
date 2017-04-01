@@ -24,4 +24,4 @@ class Composer:
         for notes in player.tracks:
             self.__mt.add_track(notes)
 
-        save_midi(self.__mt)
+        save_midi(self.__mt, StyleManager().style.instruments_per_channel)

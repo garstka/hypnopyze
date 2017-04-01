@@ -26,8 +26,7 @@ def set_style_54():
     # style.use_rhythm = False
     style.use_drums = True
 
-    style.lead = BrightAcousticPiano
-    # style.rhythm = AcousticBass
+    style.lead = AcousticGrandPiano
 
     style.base_beats_per_bar = 5
 
@@ -61,9 +60,11 @@ def set_style_54():
     b.num_walks = 20
     b.real_time = False
     b.repeat = True
-    b.key = D
+    b.key = style.key
 
     # b.scale = [A, C, D, E, G]
+    # b.octaves = [DEFAULT_OCTAVE, DEFAULT_OCTAVE - 2]
+    b.octaves = [DEFAULT_OCTAVE, DEFAULT_OCTAVE - 1]
 
     b.bars = 1
     b.i = [STAY, STAY, STAY, ROOT_DOWN, STAY]
