@@ -3,6 +3,7 @@ from miditime.miditime import MIDITime
 from hypnopyze.drums import *
 from hypnopyze.save_midi import save_midi
 from hypnopyze.sequencer import *
+from hypnopyze.composer import *
 
 
 # Tests the scale walking capability.
@@ -233,9 +234,359 @@ def test_generator(out="out.mid", bpm=120, beats_per_bar=5):
     save_midi(mt)
 
 
+# Plays all drum sounds
+def test_different_drum_sounds(out="out.mid", bpm=120, beats_per_bar=5):
+    mt = MIDITime(bpm, out)
+
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=2,
+                    perturb_velocity_cap=10)
+
+    start = 0
+    end = 120
+
+    pi = []  # length, character, ability to be looped
+    pi.append(AcousticBassDrum)  # short, dead, repeat
+    pi.append(BassDrum1)  # short, bassy, repeat
+    pi.append(SideStick)  # very short, single
+    pi.append(AcousticSnare)  # unimpressive tsh, single
+    pi.append(HandClap)  # unimpressive clap, single
+    pi.append(ElectricSnare)  # cool snare, single
+    pi.append(LowFloorTom)  # roomy tom, some
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(LowTom)  # roomy tom 3, some
+    pi.append(OpenHiHat)  # long tss, some
+    pi.append(LowMidTom)  # short tom, some
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(CrashCymbal1)  # long crash, some
+    pi.append(HighTom)  # short tom, some
+    pi.append(RideCymbal1)  # long crash, some
+    pi.append(ChineseCymbal)  # different crash, long, single
+    pi.append(RideBell)  # long bell, repeat
+    pi.append(Tambourine)  # short, single
+    pi.append(SplashCymbal)  # long, single
+    pi.append(Cowbell)  # short cowbell, repeat
+    pi.append(CrashCymbal2)  # long, single
+    pi.append(Vibraslap)  # weird, single
+    pi.append(RideCymbal2)  # long, single
+    pi.append(HiBongo)  # short, some
+    pi.append(LowBongo)  # short, dead, single
+    pi.append(MuteHiConga)  # very short, dead, single
+    pi.append(OpenHiConga)  # drummy, some
+    pi.append(LowConga)  # drummy 2, some
+    pi.append(HighTimbale)  # different drummy, single
+    pi.append(LowTimbale)  # different drummy 2, single
+    pi.append(HighAgogo)  # very short jingle, single
+    pi.append(LowAgogo)  # very short jingle 2, single
+    pi.append(Cabasa)  # short, sandy, single
+    pi.append(Maracas)  # very short, single
+    pi.append(ShortWhistle)  # short, single
+    pi.append(LongWhistle)  # long, already annoying, some (annoying)
+    pi.append(ShortGuiro)  # buzzy, single
+    pi.append(LongGuiro)  # scratchy, some (annoying)
+    pi.append(Claves)  # hammery, single
+    pi.append(HiWoodBlock)  # knocky, some
+    pi.append(LowWoodBlock)  # knocky 2, some
+    pi.append(MuteCuica)  # woo, single
+    pi.append(OpenCuica)  # moo, single
+    pi.append(MuteTriangle)  # short, repeat
+    pi.append(OpenTriangle)  # long, single
+
+    pv = []
+    pd = []
+
+    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+
+    seq.channel = CHANNEL_DRUMS
+    seq.time = start
+
+    if not seq.compatible(pattern):
+        print("Pattern incompatible")
+        return
+
+    while seq.time < end:
+        if not seq.append(pattern):
+            print("Couldn't append")
+
+    mt.add_track(seq.notes)
+
+    save_midi(mt)
+
+
+# Plays all drum sounds
+def test_useful_drum_sounds(out="out.mid", bpm=160, beats_per_bar=5):
+    mt = MIDITime(bpm, out)
+
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
+                    perturb_velocity_cap=10)
+
+    start = 0
+    end = 120
+
+    pi = []  # length, character, ability to be looped
+
+    # drummer - main
+    pi = []
+    pi.append(AcousticBassDrum)  # short, dead, repeat
+    pi.append(BassDrum1)  # short, bassy, repeat
+    pi.append(SideStick)  # very short, single
+    pi.append(ElectricSnare)  # cool snare, single
+    pi.append(LowFloorTom)  # roomy tom, some
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(LowTom)  # roomy tom 3, some
+    pi.append(OpenHiHat)  # long tss, single
+    pi.append(LowMidTom)  # short tom, some
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(CrashCymbal1)  # long crash, single
+    pi.append(HighTom)  # short tom, some
+    pi.append(RideCymbal1)  # long crash, some
+    pi.append(RideBell)  # long bell, repeat
+    pi.append(CrashCymbal2)  # long, single
+    pi.append(RideCymbal2)  # long, repeat
+
+    # drummer - limited usefulness
+
+    pi.append(SplashCymbal)  # long, single
+    pi.append(AcousticSnare)  # unimpressive tsh, single
+    pi.append(MuteTriangle)  # short, repeat
+    pi.append(ChineseCymbal)  # different crash, long, single
+
+    # cowbell operator
+
+    pi.append(Cowbell)  # short cowbell, repeat
+
+    # background drums
+
+    pi.append(HiBongo)  # short, some
+    pi.append(OpenHiConga)  # drummy, some
+    pi.append(LowConga)  # drummy 2, some
+    pi.append(LowBongo)  # short, dead, single
+    pi.append(MuteHiConga)  # very short, dead, single
+    pi.append(HighTimbale)  # different drummy, single
+    pi.append(LowTimbale)  # different drummy 2, single
+    pi.append(HiWoodBlock)  # knocky, some
+    pi.append(LowWoodBlock)  # knocky 2, some
+
+    # background jingling sounds
+
+    pi.append(Tambourine)  # short, single
+    pi.append(HighAgogo)  # very short jingle, single
+    pi.append(LowAgogo)  # very short jingle 2, single
+    pi.append(Claves)  # hammery, single
+    pi.append(OpenTriangle)  # long, single
+
+    # weird person-related sounds
+    pi.append(HandClap)  # unimpressive clap, single
+    pi.append(LongWhistle)  # long, already annoying, some (annoying)
+    pi.append(ShortWhistle)  # short, single
+    pi.append(MuteCuica)  # woo, single
+    pi.append(OpenCuica)  # moo, single
+
+    # weird instrument sounds
+    pi.append(Vibraslap)  # weird, single
+    pi.append(Cabasa)  # short, sandy, single
+    pi.append(Maracas)  # very short, single
+    pi.append(ShortGuiro)  # buzzy, single
+    pi.append(LongGuiro)  # scratchy, some (annoying)
+
+    pi = [val for val in pi for _ in range(0, 4)]
+    pv = []
+    pd = []
+
+    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+
+    seq.channel = CHANNEL_DRUMS
+    seq.time = start
+
+    if not seq.compatible(pattern):
+        print("Pattern incompatible")
+        return
+
+    while seq.time < end:
+        if not seq.append(pattern):
+            print("Couldn't append")
+
+    mt.add_track(seq.notes)
+
+    save_midi(mt)
+
+
+# Main drummer sounds
+def test_drummer_sounds(out="out.mid", bpm=120, beats_per_bar=5):
+    mt = MIDITime(bpm, out)
+
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
+                    perturb_velocity_cap=30)
+
+    start = 0
+    end = 120
+
+    pi = []  # length, character, ability to be looped
+
+    # drummer - main
+    pi = []
+
+    # bass - beat or timing element with basic pulse patterns
+    pi.append(AcousticBassDrum)  # short, dead, repeat
+    pi.append(BassDrum1)  # short, bassy, repeat
+
+    # stick - intro
+
+    pi.append(SideStick)  # very short, single
+
+    # snare - regular accents, fills
+    pi.append(ElectricSnare)  # cool snare, single
+
+    # tom - fills and solos
+    pi.append(LowFloorTom)  # roomy tom, some
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(LowTom)  # roomy tom 3, some
+    pi.append(LowMidTom)  # short tom, some
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(HighTom)  # short tom, some
+
+    # ride - constant-rhythm pattern
+    pi.append(RideCymbal1)  # long crash, some
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(RideBell)  # long bell, repeat
+
+    # hi-hat - similar to ride, not at the same time
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(OpenHiHat)  # long tss, single
+
+    # crash - accent markers, major changes
+    pi.append(CrashCymbal1)  # long crash, single
+    pi.append(CrashCymbal2)  # long, single
+
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(OpenHiHat)  # long tss, single
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(RideCymbal1)  # long crash, some
+
+    pi.append(RideCymbal1)  # long crash, some
+    pi.append(RideCymbal1)  # long crash, some
+    pi.append(OpenHiHat)  # long tss, single
+    pi.append(RideCymbal1)  # long crash, some
+    pi.append(RideCymbal1)  # long crash, some
+
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(OpenHiHat)  # long tss, single
+
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(OpenHiHat)  # long tss, single
+
+    pi = [val for val in pi for _ in range(0, 4)]
+
+    pv = []
+    pd = []
+
+    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+
+    seq.channel = CHANNEL_DRUMS
+    seq.time = start
+
+    if not seq.compatible(pattern):
+        print("Pattern incompatible")
+        return
+
+    while seq.time < end:
+        if not seq.append(pattern):
+            print("Couldn't append")
+
+    mt.add_track(seq.notes)
+
+    save_midi(mt)
+
+
+# Tom configuration
+def test_tom_sounds(out="out.mid", bpm=240, beats_per_bar=5):
+    mt = MIDITime(bpm, out)
+
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
+                    perturb_velocity_cap=30)
+
+    start = 0
+    end = 120
+
+    pi = []  # length, character, ability to be looped
+
+    # drummer - main
+    pi = []
+
+    # tom - fills and solos
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(SILENCE)
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(SILENCE)
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(SILENCE)
+    pi.append(HiMidTom)  # short tom 2, some
+
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(SILENCE)
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(SILENCE)
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(SILENCE)
+    pi.append(HiMidTom)  # short tom 2, some
+
+    pi.append(LowFloorTom)  # roomy tom, some
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(LowTom)  # roomy tom 3, some
+    pi.append(LowMidTom)  # short tom, some
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(HighTom)  # short tom, some
+
+    # pi = [val for val in pi for _ in range(0, 4)]
+
+    pv = []
+    pd = []
+
+    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+
+    seq.channel = CHANNEL_DRUMS
+    seq.time = start
+
+    if not seq.compatible(pattern):
+        print("Pattern incompatible")
+        return
+
+    while seq.time < end:
+        if not seq.append(pattern):
+            print("Couldn't append")
+
+    mt.add_track(seq.notes)
+
+    save_midi(mt)
+
+
+# Test wip composer
+def test_composer(out="out.mid", bpm=120, beats_per_bar=5):
+    composer = Composer(out, bpm, beats_per_bar)
+    composer.compose()
+
+
 def test_compose():
     test_scales("test0.mid")
     test_drums_simple("test1.mid")
     test_sequencer_simple("test2.mid")
     test_sequencer_relative("test3.mid")
     test_generator("test4.mid")
+    test_different_drum_sounds("test5.mid")
+    test_useful_drum_sounds("test5.mid")
+    test_drummer_sounds("test6_drummer.mid")
+    test_tom_sounds("test7.mid")
+    test_composer("test8.mid")

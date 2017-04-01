@@ -185,8 +185,6 @@ class Pattern:
 
                 off = rand_nonzero(top - bottom + 1)
                 current_offset = bottom - 1 + off
-                if not bottom <= current_offset <= top:
-                    print("Something's wrong")
 
             elif i == DOWN:  # go down (staying within the same octave)
 
@@ -197,8 +195,6 @@ class Pattern:
 
                 off = rand_nonzero(top - bottom + 1)
                 current_offset = top + 1 - off
-                if not bottom <= current_offset <= top:
-                    print("Something's wrong")
 
             elif i == ROOT:  # play the current root
                 current_offset = current_root()
@@ -215,15 +211,7 @@ class Pattern:
                     return None  # can be fixed, perhaps
 
                 off = rand_nonzero(top - bottom + 1)
-                print("____")
-                print("current_offset: ", current_root())
-                print("Top: ", top)
-                print("Bottom: ", bottom)
-                print("Off: ", off)
                 current_offset = top + 1 - off
-                print("current_offset: ", current_offset)
-                if not bottom <= current_offset <= top:
-                    print("Something's wrong")
 
             else:
                 new_indices.append(SILENCE)
@@ -237,7 +225,7 @@ class Pattern:
         for i in range(0, len(new_indices)):
             this_index = new_indices[i]
 
-            if is_silence(this_index):
+            if is_silence_directions(this_index):
                 continue
 
             new_indices[i] = this_index - last_index
@@ -301,17 +289,19 @@ class Pattern:
         return self.good
 
     def __hash__(self):
-        return hash(
-            self.indices)  # A collection of patterns, grouped by instruments.
+        return hash(self.indices)
 
 
+# A singleton collection of patterns, grouped by instruments.
 class PatternCollection:
+    __shared = defaultdict(lambda: [])
+
     def __init__(self):
-        self.__patterns = defaultdict(lambda: set())
+        self.__patterns = self.__shared
 
     # Add some patterns
     def add_patterns(self, instrument, patterns: [Pattern]):
-        self.__patterns[instrument].update(*patterns)
+        self.__patterns[instrument].extend(patterns)
 
     # Returns all available patterns for this instrument
     def patterns(self, instrument):

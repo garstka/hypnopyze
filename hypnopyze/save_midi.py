@@ -2,6 +2,7 @@ from midiutil.MidiFile3 import MIDIFile
 from miditime.miditime import MIDITime
 
 
+# MIDITime.add_note() method altered not to print notes
 def add_note(self: MIDITime, track, channel, note):
     time = note[0]
     pitch = note[1]
