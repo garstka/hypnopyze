@@ -15,8 +15,8 @@ class Composer:
         drummer = Drummer()
         player = PianoPlayer()
 
-        drummer.play(10)
-        player.play(10)
+        drummer.play(4)
+        player.play(4)
 
         for notes in drummer.tracks:
             self.__mt.add_track(notes)

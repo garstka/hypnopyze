@@ -102,7 +102,8 @@ class Sequencer:
         bar_count = pattern.bars
 
         fill = pattern.real_time and self.repeatable(pattern)
-        repeats = 1 if not fill else self.beats_per_bar // pattern.min_beats_per_bar
+        repeats = 1 if not fill \
+            else self.beats_per_bar // pattern.min_beats_per_bar
         perturb_range = list(range(-abs(self.perturb_velocity_cap),
                                    abs(self.perturb_velocity_cap) + 1))
         perturb_range_len = len(perturb_range)

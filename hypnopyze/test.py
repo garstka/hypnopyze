@@ -293,7 +293,7 @@ def test_different_drum_sounds(out="out.mid", bpm=120, beats_per_bar=5):
     pv = []
     pd = []
 
-    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd, \
+    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd,
                       repeatable=True)
 
     seq.channel = CHANNEL_DRUMS

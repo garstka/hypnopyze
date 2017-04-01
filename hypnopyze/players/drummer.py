@@ -14,91 +14,69 @@ class Drummer:
         style = StyleManager().style
         self.beats_per_bar = style.beats_per_bar
         self.bar_group = style.bar_group
-        self.__t = start_time if start_time >= 0 else 0
 
         # bass - beat or timing element with basic pulse patterns
         self.seq_bass = Sequencer(self.beats_per_bar, style.bass_perturb)
         self.seq_bass.channel = CHANNEL_DRUMS
         self.seq_bass.time = start_time
 
-        # stick - intro
-        self.seq_stick = Sequencer(self.beats_per_bar, style.stick_perturb)
-        self.seq_stick.channel = CHANNEL_DRUMS
-        self.seq_stick.time = start_time
-
-        # snare - regular accents, fills
-        self.seq_snare = Sequencer(self.beats_per_bar, style.snare_perturb)
-        self.seq_snare.channel = CHANNEL_DRUMS
-        self.seq_snare.time = start_time
-
-        # tom - fills and solos
-        self.seq_toms = Sequencer(self.beats_per_bar, style.toms_perturb)
-        self.seq_toms.channel = CHANNEL_DRUMS
-        self.seq_toms.time = start_time
-
         # ride - constant-rhythm pattern
         # & hi-hat - similar to ride, not at the same time
+        # & crash - accent markers, major changes
         self.seq_hi_ride = Sequencer(self.beats_per_bar, style.ride_perturb)
         self.seq_hi_ride.channel = CHANNEL_DRUMS
         self.seq_hi_ride.time = start_time
 
-        # crash - accent markers, major changes
-        self.seq_crash = Sequencer(self.beats_per_bar, style.crash_perturb)
-        self.seq_crash.channel = CHANNEL_DRUMS
-        self.seq_crash.time = start_time
-
         # mixed, sequential
+        # snare - regular accents, fills
+        # & tom - fills and solos
         self.seq_mixed = Sequencer(self.beats_per_bar, style.mixed_perturb)
         self.seq_mixed.channel = CHANNEL_DRUMS
         self.seq_mixed.time = start_time
+
+        self.filler = []
 
     def play(self, bar_groups):
 
         sm = StyleManager()
         prng = sm.prng
         collection = sm.pattern_collection
-        patterns_bass = collection.patterns("drums_bass")
-        patterns_mixed = collection.patterns("drums_mixed")
 
-        def rand_bass():
-            return patterns_bass[prng.choice(len(patterns_bass))]
+        patterns = [collection.patterns("drums_bass"),
+                    collection.patterns("drums_mixed"),
+                    collection.patterns("drums_hi_ride")]
 
-        def rand_mixed():
-            return patterns_mixed[prng.choice(len(patterns_mixed))]
+        seqs = [self.seq_bass,
+                self.seq_mixed,
+                self.seq_hi_ride]
 
         total_time = bar_groups * self.bar_group * self.beats_per_bar
+        for i in range(0, len(patterns)):
 
-        bass = self.seq_bass
-        while bass.time < total_time:
-            if not patterns_bass:
-                print("drums_bass collection empty")
-                break
-            pattern = rand_bass()
-            if not bass.compatible(pattern):
-                print("Not compatible - bass")
-                return
+            pattern_list = patterns[i]
+            seq = seqs[i]
 
-            bass.append(pattern)
+            pattern_count = len(pattern_list)
+            if pattern_count == 0:
+                print("Drum collection ", i, " is empty.")
+                continue
 
-        mixed = self.seq_mixed
-        while mixed.time < total_time:
-            if not patterns_mixed:
-                print("drums_mixed collection empty")
-                break
-            pattern = rand_mixed()
-            if not mixed.compatible(pattern):
-                print("Not compatible - mixed")
-                return
+            def rand():  # random pattern
+                return pattern_list[prng.choice(pattern_count)]
 
-            mixed.append(pattern)
+            while seq.time < total_time:
+                pattern = rand()
+
+                if not seq.compatible(pattern):
+                    print("Incompatible pattern encountered.")
+                    seq.time = seq.time + self.beats_per_bar
+                    continue
+
+                seq.append(pattern)
 
     # Returns all the tracks
     @property
     def tracks(self):
         return [l for l in [self.seq_bass.notes,
-                            self.seq_stick.notes,
-                            self.seq_snare.notes,
-                            self.seq_toms.notes,
                             self.seq_hi_ride.notes,
-                            self.seq_crash.notes,
                             self.seq_mixed.notes] if l]

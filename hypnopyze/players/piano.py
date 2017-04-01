@@ -14,7 +14,6 @@ class PianoPlayer:
 
         self.beats_per_bar = style.beats_per_bar
         self.bar_group = style.bar_group
-        self.__t = start_time if start_time >= 0 else 0
 
         self.__seq = Sequencer(self.beats_per_bar, style.lead_perturb)
         self.__seq.channel = style.lead_channel

@@ -85,6 +85,7 @@ def set_style_54():
     #
     #
 
+    b.use_directions = False
     b.use_walks = False
 
     #
@@ -92,35 +93,35 @@ def set_style_54():
     #
 
     instrument = "drums_bass"
-    b.real_time = True
-    b.use_directions = False
 
+    b.real_time = True
     b.bars = 1
     b.i = [BassDrum1, BassDrum1, S, S, S]
-
-    #
-    # snare
-    #
-
-    instrument = "drums_snare"
-    b.real_time = True
-
-    b.bars = 1
-    b.i = [S, S, S, ElectricSnare, S]
+    b.v = [H, M, 0, 0, 0]
+    b.d = []
+    build()
 
     #
     # hi-hat / ride
     #
 
-    instrument = "drums_hiride"
+    instrument = "drums_hi_ride"
 
-    b.bars = 1
-    b.i = [ClosedHiHat, S, PedalHiHat, S, ClosedHiHat, S, PedalHiHat, S,
-           OpenHiHat, S]
+    b.real_time = True
+    b.bars = 2
+    b.i = [ClosedHiHat, S, PedalHiHat, S, ClosedHiHat, S, PedalHiHat, OpenHiHat,
+           S, S]
+    b.v = []
+    b.d = [1, 0, 1, 0, 1, 0, 1, 0, 4, 0]
     build()
 
+    b.real_time = True
+    b.bars = 1
     b.i = [RideCymbal2, S, RideCymbal2, S, RideCymbal2, S, RideBell, RideBell,
            CrashCymbal1, S]
+    b.v = []
+    b.d = []
+    build()
 
     #
     # mixed, sequential
@@ -131,6 +132,8 @@ def set_style_54():
 
     b.bars = 2
     b.i = [LowFloorTom, ElectricSnare] * 10
+    b.v = []
+    b.d = []
 
     # for testing bar lengths:
     # b.i = []
