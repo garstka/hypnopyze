@@ -4,6 +4,7 @@ from hypnopyze.drums import *
 from hypnopyze.save_midi import save_midi
 from hypnopyze.sequencer import *
 from hypnopyze.composer import *
+from hypnopyze.scales.blueprint import *
 
 
 # Tests the scale walking capability.
@@ -392,7 +393,7 @@ def test_useful_drum_sounds(out="out.mid", bpm=160, beats_per_bar=5):
     pi.append(ShortGuiro)  # buzzy, single
     pi.append(LongGuiro)  # scratchy, some (annoying)
 
-    pi = [val for val in pi for _ in range(0, 4)]
+    # pi = [val for val in pi for _ in range(0, 4)]
     pv = []
     pd = []
 
@@ -573,9 +574,124 @@ def test_tom_sounds(out="out.mid", bpm=240, beats_per_bar=5):
     save_midi(mt)
 
 
+# Hi-hat / ride
+def test_hi_ride_sounds(out="out.mid", bpm=180, beats_per_bar=5):
+    mt = MIDITime(bpm, out)
+
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
+                    perturb_velocity_cap=30)
+
+    start = 0
+    end = 120
+
+    pi = []  # length, character, ability to be looped
+
+    # drummer - main
+    pi = []
+
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(SILENCE)
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(SILENCE)
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(SILENCE)
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(OpenHiHat)  # long tss, single
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(SILENCE)
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(SILENCE)
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(SILENCE)
+    pi.append(RideBell)  # long bell, repeat
+    pi.append(CrashCymbal1)  # long crash, single
+
+    # pi = [val for val in pi for _ in range(0, 4)]
+    pv = []
+    pd = []
+
+    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+
+    seq.channel = CHANNEL_DRUMS
+    seq.time = start
+
+    if not seq.compatible(pattern):
+        print("Pattern incompatible")
+        return
+
+    while seq.time < end:
+        if not seq.append(pattern):
+            print("Couldn't append")
+
+    mt.add_track(seq.notes)
+
+    save_midi(mt)
+
+
+# Hi-hat / ride + toms
+def test_fill_sounds(out="out.mid", bpm=240, beats_per_bar=4):
+    mt = MIDITime(bpm, out)
+
+    seq = Sequencer(beats_per_bar=beats_per_bar, time_step=1,
+                    perturb_velocity_cap=30)
+
+    start = 0
+    end = 120
+
+    # drummer - main
+
+    pi = []
+    pi.append(LowFloorTom)  # roomy tom, some
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(LowTom)  # roomy tom 3, some
+    pi.append(LowMidTom)  # short tom, some
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(HighTom)  # short tom, some
+
+    pi = []
+
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(LowFloorTom)  # roomy tom, some
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(HighFloorTom)  # roomy tom 2, some
+    pi.append(ClosedHiHat)  # very short tss, repeat
+    pi.append(LowTom)  # roomy tom 3, some
+    pi.append(PedalHiHat)  # very short tss 2, repeat
+    pi.append(OpenHiHat)  # long tss, single
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(LowMidTom)  # short tom, some
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(HiMidTom)  # short tom 2, some
+    pi.append(RideCymbal2)  # long, repeat
+    pi.append(HighTom)  # short tom, some
+    pi.append(RideBell)  # long bell, repeat
+    pi.append(CrashCymbal1)  # long crash, single
+
+    # pi = [val for val in pi for _ in range(0, 4)]
+    pv = []
+    pd = []
+
+    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+
+    seq.channel = CHANNEL_DRUMS
+    seq.time = start
+
+    if not seq.compatible(pattern):
+        print("Pattern incompatible")
+        return
+
+    while seq.time < end:
+        if not seq.append(pattern):
+            print("Couldn't append")
+
+    mt.add_track(seq.notes)
+
+    save_midi(mt)
+
+
 # Test wip composer
-def test_composer(out="out.mid", bpm=120, beats_per_bar=5):
-    composer = Composer(out, bpm, beats_per_bar)
+def test_composer(out="out.mid"):
+    composer = Composer(out)
     composer.compose()
 
 
@@ -585,8 +701,10 @@ def test_compose():
     test_sequencer_simple("test2.mid")
     test_sequencer_relative("test3.mid")
     test_generator("test4.mid")
-    test_different_drum_sounds("test5.mid")
-    test_useful_drum_sounds("test5.mid")
-    test_drummer_sounds("test6_drummer.mid")
-    test_tom_sounds("test7.mid")
-    test_composer("test8.mid")
+    test_different_drum_sounds("test5_drums.mid")
+    test_useful_drum_sounds("test6_usefuldrummer.mid")
+    test_drummer_sounds("test7_drummer.mid")
+    test_tom_sounds("test8_toms.mid")
+    test_composer("test9_compose.mid")
+    test_hi_ride_sounds("test10_hiride.mid")
+    test_fill_sounds("test11_fill.mid")

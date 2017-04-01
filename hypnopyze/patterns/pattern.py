@@ -1,7 +1,5 @@
-from collections import defaultdict
 from numpy.random import RandomState
-
-from hypnopyze.scales import *
+from hypnopyze.scales.walker import *
 
 # special pattern elements
 
@@ -289,19 +287,3 @@ class Pattern:
 
     def __hash__(self):
         return hash(self.indices)
-
-
-# A singleton collection of patterns, grouped by instruments.
-class PatternCollection:
-    __shared = defaultdict(lambda: [])
-
-    def __init__(self):
-        self.__patterns = self.__shared
-
-    # Add some patterns
-    def add_patterns(self, instrument, patterns: [Pattern]):
-        self.__patterns[instrument].extend(patterns)
-
-    # Returns all available patterns for this instrument
-    def patterns(self, instrument):
-        return self.__patterns[instrument]

@@ -1,5 +1,6 @@
 from hypnopyze.sequencer import *
 from hypnopyze.instruments import *
+from hypnopyze.styles.manager import *
 
 
 class PianoPlayer:
@@ -7,31 +8,38 @@ class PianoPlayer:
     # - bar_group - arbitrary group of bars
     # - start_time - starting time of the first bar
     def __init__(self,
-                 beats_per_bar: int = 5,
-                 bar_group: int = 4,
-                 time_step: int = 1,
-                 instrument: int = AcousticGrandPiano,
                  start_time: int = 0):
-        self.beats_per_bar = beats_per_bar
-        self.bar_group = bar_group
-        self.time_step = time_step
+
+        style = StyleManager().style
+
+        self.beats_per_bar = style.beats_per_bar_given_res(style.lead_res)
+        self.bar_group = style.bar_group
+        self.time_step = style.time_step_given_res(style.lead_res)
         self.__t = start_time if start_time >= 0 else 0
 
-        self.seq = Sequencer(beats_per_bar, time_step, 20)
-        self.seq.channel = 0
-        self.seq.time = start_time
+        self.__seq = Sequencer(self.beats_per_bar,
+                               self.time_step,
+                               style.lead_perturb)
+        self.__seq.channel = style.lead_channel
+        self.__seq.time = start_time
 
     def play(self, bar_groups):
 
-        collection = PatternCollection().patterns("piano")
+        sm = StyleManager()
+        prng = sm.prng
+
+        collection = sm.pattern_collection.patterns("lead")
         collection_size = len(collection)
-        prng = RandomState(75123481)
+
+        if not collection:
+            print("Collection empty")
+            return
 
         def rand_pattern():
             return collection[prng.choice(collection_size)]
 
         total_time = bar_groups * self.bar_group * self.time_step
-        seq = self.seq
+        seq = self.__seq
         while seq.time < total_time:
             pattern = rand_pattern()
             if not seq.compatible(pattern):
@@ -43,4 +51,4 @@ class PianoPlayer:
     # Returns all the tracks
     @property
     def tracks(self):
-        return [l for l in [self.seq.notes] if l]
+        return [l for l in [self.__seq.notes] if l]

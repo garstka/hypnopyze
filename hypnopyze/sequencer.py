@@ -1,7 +1,7 @@
 from math import ceil
 
-from hypnopyze.patterns import *
-import numpy as np
+from hypnopyze.patterns.pattern import *
+from hypnopyze.styles.manager import StyleManager
 
 
 # For creating sequences of notes.
@@ -65,7 +65,7 @@ class Sequencer:
     def time_scale(self, pattern: Pattern) -> int:
 
         if pattern.real_time:
-            return 1.0
+            return 1
 
         #
         # Example 1:
@@ -93,26 +93,26 @@ class Sequencer:
 
     # If compatible, returns the number of bars the pattern will take up.
     def bar_count(self, pattern: Pattern) -> int:
-        return int(ceil(self.time_scale(pattern) * pattern.beats
-                        / self.beats_per_bar))
+        return int(ceil(pattern.beats / pattern.min_beats_per_bar)) * \
+               self.time_scale(pattern)
 
     # Appends the pattern at the current time point, if it's compatible.
-    def append(self, pattern: Pattern) -> bool:
+    # Returns the number of bars appended
+    def append(self, pattern: Pattern) -> int:
 
         if not self.compatible(pattern):
             print("Pattern is not compatible")
-            return False
+            return 0
+
+        prng = StyleManager().prng
 
         time_scale = self.time_scale(pattern)
         bar_count = self.bar_count(pattern)
 
-        if pattern.real_time:
-            i = 33
-
         fill = pattern.real_time and self.repeatable(pattern)
         repeats = 1 if not fill else self.beats_per_bar // pattern.beats
         perturb_range = list(range(-abs(self.perturb_velocity_cap),
-                                   abs(self.perturb_velocity_cap)))
+                                   abs(self.perturb_velocity_cap) + 1))
         perturb_range_len = len(perturb_range)
         p = pattern
         t = self.__t
@@ -128,8 +128,8 @@ class Sequencer:
                 # perturb the velocity if required
                 if perturb_range:
                     velocity += perturb_range[
-                        np.random.binomial(perturb_range_len - 1,
-                                           0.5)]
+                        prng.binomial(perturb_range_len - 1,
+                                      0.5)]
 
                     velocity = max(0, min(velocity, MAX_VELOCITY))
 
@@ -143,6 +143,6 @@ class Sequencer:
                 # update the time
                 t += full_step
 
-        self.__t += self.beats_per_bar * bar_count * self.__time_step
+        self.__t = t
 
-        return True
+        return bar_count

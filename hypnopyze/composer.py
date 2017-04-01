@@ -1,21 +1,19 @@
 from miditime.miditime import MIDITime
-from hypnopyze.drums import *
-from hypnopyze.piano import *
+
+from hypnopyze.players.piano import *
+from hypnopyze.players.drummer import *
 from hypnopyze.save_midi import save_midi
 
 
 # Composes a MIDI song, i.e. a few sequences of notes played together
 class Composer:
-    def __init__(self, out_file: str = "out.mid",
-                 beats_per_minute: int = 120, beats_per_bar: int = 5):
-        self.__beats_per_bar = beats_per_bar
-        # self.__bars_group = 4
-        # self.__bars_per_minute = beats_per_minute / self.__beats_per_bar
-        self.__mt = MIDITime(beats_per_minute, out_file)
+    def __init__(self, out_file: str = "out.mid"):
+        self.__mt = MIDITime(StyleManager().style.bpm, out_file)
 
     def compose(self):
-        drummer = Drummer(self.__beats_per_bar * 4)
-        player = PianoPlayer(self.__beats_per_bar * 2)
+
+        drummer = Drummer()
+        player = PianoPlayer()
 
         drummer.play(10)
         player.play(10)
