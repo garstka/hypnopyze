@@ -9,7 +9,9 @@ def patterns_54():
 
     base = 5
     num_walks = 20
-    key = E
+    real_time = False
+    repeatable = True
+    key = D
     scale = [A, C, D, E, G]
     walker = ScaleWalker(Scale(ScaleBlueprint(scale), key))
 
@@ -18,7 +20,8 @@ def patterns_54():
     pd = []
 
     def render():
-        walks = list(set([Pattern("", base, pi, pv, pd, True) \
+        walks = list(set([Pattern("", base, pi, pv, pd, repeatable=repeatable,
+                                  real_time=real_time) \
                          .walk_from_these_directions(len(scale), prng)
                           for _ in range(0, num_walks)]))
 
@@ -38,6 +41,7 @@ def patterns_54():
     render()
 
     base = 10
+    real_time = True
     pi = [STAY, NEXT, NEXT, NEXT, NEXT_ROOT]
     pv = [H, M, M, M, H]
     pd = []

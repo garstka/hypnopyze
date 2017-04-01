@@ -61,23 +61,28 @@ class Sequencer:
         return True
 
     # If compatible, returns how much the pattern will be scaled up.
-    #
-    # Example 1:
-    # e.g. beats_per_bar = 16
-    #      pattern.min_beats_per_bar = 4
-    #
-    # time_scale = beats_per_bar // p.mbpb = 4
-    #
-    # also, can be be repeated, as beats_per_bar % p.mbpb == 0
-    #
-    # Example 2:
-    # e.g. beats_per_bar = 20
-    #      pattern.min_beats_per_bar = 3
-    #
-    # time_scale = beats_per_bar // p.mbpb = 6
-    #
-    # shouldn't be repeated, as beats_per_bar % p.mbpb != 0
+    # Not applicable to patterns with pattern.real_time == True
     def time_scale(self, pattern: Pattern) -> int:
+
+        if pattern.real_time:
+            return 1.0
+
+        #
+        # Example 1:
+        # e.g. beats_per_bar = 16
+        #      pattern.min_beats_per_bar = 4
+        #
+        # time_scale = beats_per_bar // p.mbpb = 4
+        #
+        # also, can be be repeated, as beats_per_bar % p.mbpb == 0
+        #
+        # Example 2:
+        # e.g. beats_per_bar = 20
+        #      pattern.min_beats_per_bar = 3
+        #
+        # time_scale = beats_per_bar // p.mbpb = 6
+        #
+        # shouldn't be repeated, as beats_per_bar % p.mbpb != 0
         return self.beats_per_bar // pattern.min_beats_per_bar
 
     # Returns true, if the pattern can be looped at this time scale,
@@ -100,36 +105,43 @@ class Sequencer:
 
         time_scale = self.time_scale(pattern)
         bar_count = self.bar_count(pattern)
+
+        if pattern.real_time:
+            i = 33
+
+        fill = pattern.real_time and self.repeatable(pattern)
+        repeats = 1 if not fill else self.beats_per_bar // pattern.beats
         perturb_range = list(range(-abs(self.perturb_velocity_cap),
                                    abs(self.perturb_velocity_cap)))
         perturb_range_len = len(perturb_range)
         p = pattern
         t = self.__t
         full_step = self.__time_step * time_scale
-        for (index, velocity, duration) in p.ivd:
+        for _ in range(0, repeats):
+            for (index, velocity, duration) in p.ivd:
 
-            # ignore silence
-            if is_silence(index):
-                t += full_step  # update the time
-                continue
+                # ignore silence
+                if is_silence(index):
+                    t += full_step  # update the time
+                    continue
 
-            # perturb the velocity if required
-            if perturb_range:
-                velocity += perturb_range[
-                    np.random.binomial(perturb_range_len - 1,
-                                       0.5)]
+                # perturb the velocity if required
+                if perturb_range:
+                    velocity += perturb_range[
+                        np.random.binomial(perturb_range_len - 1,
+                                           0.5)]
 
-                velocity = max(0, min(velocity, MAX_VELOCITY))
+                    velocity = max(0, min(velocity, MAX_VELOCITY))
 
-            # correct the duration given scale
-            duration *= full_step
+                # correct the duration given scale
+                duration *= full_step
 
-            # append the note
-            self.__notes.append([[t, index, velocity, duration],
-                                 self.channel])
+                # append the note
+                self.__notes.append([[t, index, velocity, duration],
+                                     self.channel])
 
-            # update the time
-            t += full_step
+                # update the time
+                t += full_step
 
         self.__t += self.beats_per_bar * bar_count * self.__time_step
 

@@ -14,54 +14,37 @@ def is_silence(note):
     return not (0 <= note <= MAX_NOTE)
 
 
-# Returns true, if the note represents silence in a scale walk.
+# Returns true, if the index represents silence in a scale walk.
 def is_silence_walk(index):
     return index == SILENCE
 
 
-# Returns true, if the note represents silence in a direction list.
+# Returns true, if the note represents silence in a list of directions.
 def is_silence_directions(index):
     return not STAY <= index <= NEXT_DOWN
 
 
 # directions for generating patterns using scales
+# see Pattern.walk_from_these_directions
 
 STAY = 0  # play the previous note again
-ST = STAY
-
 ROOT = 1  # play the current octave's root note
-RT = ROOT
-
 NEXT_ROOT = 2  # play the next octave's root note
-NRT = NEXT_ROOT
-
 PREV_ROOT = 3  # play the previous octave's root note
-PRT = PREV_ROOT
 
 NEXT = 4  # play the next note
-N = NEXT
-
 PREV = 5  # play the previous note
-P = PREV
 
 UP = 6  # play random in (current, NEXT_ROOT), closer to current are more likely
 DOWN = 7  # play random in (ROOT, current), closer to current are more likely
-DN = DOWN
 
 ROOT_DOWN = 8  # play random in (PREV_ROOT, ROOT), closer to ROOT are more likely
-RDN = ROOT_DOWN
 
 PREV_UP = 9  # switch to PREV_ROOT -> UP
-PUP = PREV_UP
-
 PREV_DOWN = 10  # switch to PREV_ROOT -> ROOT_DOWN
-PDN = PREV_DOWN
 
 NEXT_UP = 11  # switch to NEXT_ROOT -> UP
-NUP = NEXT_UP
-
 NEXT_DOWN = 12  # switch to NEXT_ROOT -> ROOT_DOWN
-NDN = NEXT_DOWN
 
 # velocities
 
@@ -78,17 +61,21 @@ DEFAULT_DURATION = 1
 
 # A sequence of offsets within a scale / sounds to be played.
 class Pattern:
-    # - beats_per_bar - minimum compatible beats per bar (minimum resolution)
-    # - pattern - a sequence of integers (offsets or sounds)
-    # - velocity - base sound velocity
-    # - duration - each sound duration
+    # - min_beats_per_bar - minimum compatible beats per bar
+    # (minimum resolution)
+    # - indices - a sequence of integers (offsets or sounds)
+    # - velocity - velocity for each note
+    # - duration - duration for each note
+    # - real_time - if true, pattern won't be upscaled to fit the entire bar,
+    # if the target has more beats per bar than min_beats_per_bar
     def __init__(self,
                  name: str,  # the pattern name
                  min_beats_per_bar: int,
                  indices: [int],
                  velocity: [int],
                  duration: [int],
-                 repeatable: bool = True):
+                 repeatable: bool = True,
+                 real_time: bool = False):
 
         # the pattern name
         self.name = name
@@ -96,8 +83,12 @@ class Pattern:
         # the minimum number of beats per bar for this pattern to work
         self.min_beats_per_bar = min_beats_per_bar
 
-        # is the pattern repeatable at its original time scale?
+        # is the pattern repeatable at compatible time scales?
         self.repeatable = repeatable
+
+        # should the pattern be scaled to fit a bar (False),
+        # or played at the target tempo?
+        self.real_time = real_time
 
         # integer indices (offsets or MIDI notes).
         self.__indices = tuple(indices)
@@ -119,18 +110,19 @@ class Pattern:
     # Treats the indices as general directions for a walk, and
     # returns a pattern that uses offsets within a scale, for this scale
     # size.
-    # May produce different results, as it uses a PRNG.
+    # May produce different results each time, as it uses a PRNG.
     # Returns None if the directions are invalid for a scale of this size,
     # or the imperfect algorithm failed (for now).
-    #
-    # Example:
-    # for
-    # [CURRENT, UP, UP, DOWN, DOWN, NEXT_ROOT, PREV_ROOT]
-    # scale_size = 5
-    # one possibility would be:
-    # absolute offsets: [0, 1, 3, 2, 1, 4, 0]
-    # walk offsets: [0, 1, 2, -1, -1, 3, -4]
     def walk_from_these_directions(self, scale_size: int, prng: RandomState):
+        #
+        # Example:
+        # for
+        # [CURRENT, UP, UP, DOWN, DOWN, NEXT_ROOT, PREV_ROOT]
+        # scale_size = 5
+        # one possibility would be:
+        # absolute offsets: [0, 1, 3, 2, 1, 4, 0]
+        # walk offsets: [0, 1, 2, -1, -1, 3, -4]
+
         if scale_size == 0:
             return None
 
@@ -225,6 +217,7 @@ class Pattern:
         for i in range(0, len(new_indices)):
             this_index = new_indices[i]
 
+            # ignore silence
             if is_silence_directions(this_index):
                 continue
 
@@ -235,13 +228,17 @@ class Pattern:
                        self.min_beats_per_bar,
                        new_indices,
                        self.velocity,
-                       self.duration)
+                       self.duration,
+                       self.repeatable,
+                       self.real_time)
 
-    # Returns the pattern using sounds, using the scale walker.
+    # Returns the pattern using sounds, by walking a scale with the scale
+    # walker.
     def sound_pattern_from_this_walk(self, scale_walker: ScaleWalker):
         new_indices = []
         for i in self.indices:
 
+            # ignore silence
             if is_silence_walk(i):
                 new_indices.append(i)
                 continue
@@ -253,7 +250,9 @@ class Pattern:
                        self.min_beats_per_bar,
                        new_indices,
                        self.velocity,
-                       self.duration)
+                       self.duration,
+                       self.repeatable,
+                       self.real_time)
 
     # Returns the length of the pattern in beats.
     @property
