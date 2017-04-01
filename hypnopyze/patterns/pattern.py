@@ -1,5 +1,6 @@
 from numpy.random import RandomState
 from hypnopyze.scales.walker import *
+from math import ceil
 
 # special pattern elements
 
@@ -59,8 +60,7 @@ DEFAULT_DURATION = 1
 
 # A sequence of offsets within a scale / sounds to be played.
 class Pattern:
-    # - min_beats_per_bar - minimum compatible beats per bar
-    # (minimum resolution)
+    # - bars - how many bars does the pattern represent
     # - indices - a sequence of integers (offsets or sounds)
     # - velocity - velocity for each note
     # - duration - duration for each note
@@ -68,7 +68,7 @@ class Pattern:
     # if the target has more beats per bar than min_beats_per_bar
     def __init__(self,
                  name: str,  # the pattern name
-                 min_beats_per_bar: int,
+                 bars: int,
                  indices: [int],
                  velocity: [int],
                  duration: [int],
@@ -78,8 +78,8 @@ class Pattern:
         # the pattern name
         self.name = name
 
-        # the minimum number of beats per bar for this pattern to work
-        self.min_beats_per_bar = min_beats_per_bar
+        # the bar count
+        self.bars = bars
 
         # is the pattern repeatable at compatible time scales?
         self.repeatable = repeatable
@@ -223,7 +223,7 @@ class Pattern:
             last_index = this_index
 
         return Pattern(self.name,
-                       self.min_beats_per_bar,
+                       self.bars,
                        new_indices,
                        self.velocity,
                        self.duration,
@@ -245,12 +245,17 @@ class Pattern:
             new_indices.append(scale_walker.current.midi_note)
 
         return Pattern(self.name,
-                       self.min_beats_per_bar,
+                       self.bars,
                        new_indices,
                        self.velocity,
                        self.duration,
                        self.repeatable,
                        self.real_time)
+
+    # min_beats_per_bar - minimum compatible beats per bar (minimum resolution)
+    @property
+    def min_beats_per_bar(self):
+        return int(ceil(self.beats / self.bars))
 
     # Returns the length of the pattern in beats.
     @property

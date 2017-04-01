@@ -121,7 +121,7 @@ def test_sequencer_simple(out="out.mid", bpm=120, beats_per_bar=5):
     pi = [BassDrum1, S, AcousticSnare, ClosedHiHat, BassDrum1]
     pv = [H, 0, M, M, H]
     pd = [1, 1, 1, 1, 1]
-    pattern = Pattern("drum", len(pi), pi, pv, pd, repeatable=True)
+    pattern = Pattern("drum", 1, pi, pv, pd, repeatable=True)
 
     seq.time = start
     seq.channel = CHANNEL_DRUMS
@@ -155,7 +155,7 @@ def test_sequencer_relative(out="out.mid", bpm=120, beats_per_bar=10):
     pi = [0, S, 1, S, 2]
     pv = [H, 0, M, 0, H]
     pd = [1, 1, 1, 1, 1]
-    pattern = Pattern("piano", len(pi), pi, pv, pd, repeatable=True)
+    pattern = Pattern("piano", 1, pi, pv, pd, repeatable=True)
 
     # convert to sounds
     walker = ScaleWalker(Scale(ScaleBlueprint([A, C, D, E, G]), E))
@@ -199,7 +199,7 @@ def test_generator(out="out.mid", bpm=120, beats_per_bar=5):
     pi = [STAY, -1, UP, -1, UP, DOWN, ROOT_DOWN, -1, -1, NEXT_ROOT]
     pv = [H, 0, M, 0, H, H, M, 0, 0, M]
     pd = [2, 1, 1, 3, 1, 1, 3, 0, 0, 1]
-    pattern0 = Pattern("piano1", int(len(pi) / 2), pi, pv, pd, repeatable=True)
+    pattern0 = Pattern("piano1", 2, pi, pv, pd, repeatable=True)
     patterns = [pattern0.walk_from_these_directions(len(scale), prng)
                 for _ in range(1, 10)]
 
@@ -297,7 +297,8 @@ def test_different_drum_sounds(out="out.mid", bpm=120, beats_per_bar=5):
     pv = []
     pd = []
 
-    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd, \
+                      repeatable=True)
 
     seq.channel = CHANNEL_DRUMS
     seq.time = start
@@ -397,7 +398,8 @@ def test_useful_drum_sounds(out="out.mid", bpm=160, beats_per_bar=5):
     pv = []
     pd = []
 
-    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd,
+                      repeatable=True)
 
     seq.channel = CHANNEL_DRUMS
     seq.time = start
@@ -492,7 +494,8 @@ def test_drummer_sounds(out="out.mid", bpm=120, beats_per_bar=5):
     pv = []
     pd = []
 
-    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd,
+                      repeatable=True)
 
     seq.channel = CHANNEL_DRUMS
     seq.time = start
@@ -556,7 +559,8 @@ def test_tom_sounds(out="out.mid", bpm=240, beats_per_bar=5):
     pv = []
     pd = []
 
-    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd,
+                      repeatable=True)
 
     seq.channel = CHANNEL_DRUMS
     seq.time = start
@@ -610,7 +614,8 @@ def test_hi_ride_sounds(out="out.mid", bpm=180, beats_per_bar=5):
     pv = []
     pd = []
 
-    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd,
+                      repeatable=True)
 
     seq.channel = CHANNEL_DRUMS
     seq.time = start
@@ -671,7 +676,8 @@ def test_fill_sounds(out="out.mid", bpm=240, beats_per_bar=4):
     pv = []
     pd = []
 
-    pattern = Pattern("drums", beats_per_bar, pi, pv, pd, repeatable=True)
+    pattern = Pattern("drums", int(ceil(len(pi) / beats_per_bar)), pi, pv, pd,
+                      repeatable=True)
 
     seq.channel = CHANNEL_DRUMS
     seq.time = start

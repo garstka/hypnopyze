@@ -74,7 +74,9 @@ class Drummer:
         def rand_mixed():
             return patterns_mixed[prng.choice(len(patterns_mixed))]
 
-        total_time = bar_groups * self.bar_group * self.time_step
+        total_time = bar_groups * self.bar_group * \
+                     self.beats_per_bar * self.time_step
+        
         bass = self.seq_bass
         while bass.time < total_time:
             if not patterns_bass:

@@ -12,7 +12,7 @@ class PatternBuilder:
         #
 
         self.name = ""
-        self.base = 4  # min_beats_per_bar
+        self.bars = 1  # bars in the pattern
         self.i = []  # indices
         self.v = []  # velocity
         self.d = []  # duration
@@ -66,7 +66,7 @@ class PatternBuilder:
                 Scale(ScaleBlueprint(self.scale), self.key))
 
         base_pattern = Pattern(self.name,
-                               self.base,
+                               self.bars,
                                self.i,
                                self.v,
                                self.d,

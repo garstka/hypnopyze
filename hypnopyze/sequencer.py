@@ -91,10 +91,14 @@ class Sequencer:
         return pattern.repeatable \
                and self.beats_per_bar % pattern.min_beats_per_bar == 0
 
-    # If compatible, returns the number of bars the pattern will take up.
-    def bar_count(self, pattern: Pattern) -> int:
-        return int(ceil(pattern.beats / pattern.min_beats_per_bar)) * \
-               self.time_scale(pattern)
+        # If compatible, returns the number of bars the pattern will take up.
+        # def bar_count(self, pattern: Pattern) -> int:
+        # return int(ceil(pattern.beats / pattern.min_beats_per_bar)) * \
+        #      self.time_scale(pattern)
+
+        # return int(ceil(self.time_scale(pattern) * pattern.beats
+        #                / self.beats_per_bar))
+        # return self.time_scale(pattern) * pattern.bars
 
     # Appends the pattern at the current time point, if it's compatible.
     # Returns the number of bars appended
@@ -107,10 +111,11 @@ class Sequencer:
         prng = StyleManager().prng
 
         time_scale = self.time_scale(pattern)
-        bar_count = self.bar_count(pattern)
+        # bar_count = self.bar_count(pattern)
+        bar_count = pattern.bars
 
         fill = pattern.real_time and self.repeatable(pattern)
-        repeats = 1 if not fill else self.beats_per_bar // pattern.beats
+        repeats = 1 if not fill else self.beats_per_bar // pattern.min_beats_per_bar
         perturb_range = list(range(-abs(self.perturb_velocity_cap),
                                    abs(self.perturb_velocity_cap) + 1))
         perturb_range_len = len(perturb_range)

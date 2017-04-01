@@ -38,7 +38,8 @@ class PianoPlayer:
         def rand_pattern():
             return collection[prng.choice(collection_size)]
 
-        total_time = bar_groups * self.bar_group * self.time_step
+        total_time = bar_groups * self.bar_group * \
+                     self.beats_per_bar * self.time_step
         seq = self.__seq
         while seq.time < total_time:
             pattern = rand_pattern()

@@ -37,6 +37,7 @@ def set_style_54():
 
     style.key = E
 
+    # style.bpm = 240
     style.bpm = 120
     style.bar_group = 4
 
@@ -60,7 +61,6 @@ def set_style_54():
     b.use_directions = True
     b.prng = sm.prng
 
-    b.base = 5
     b.num_walks = 20
     b.real_time = False
     b.repeat = True
@@ -68,13 +68,13 @@ def set_style_54():
 
     # b.scale = [A, C, D, E, G]
 
-    b.base = 5
+    b.bars = 1
     b.i = [STAY, STAY, STAY, ROOT_DOWN, STAY]
     b.v = [H, M, M, M, M]
     b.d = []
     build()
 
-    b.base = 10
+    b.bars = 1
     b.real_time = True
     b.i = [STAY, NEXT, NEXT, NEXT, NEXT_ROOT]
     b.v = [H, M, M, M, H]
@@ -97,7 +97,7 @@ def set_style_54():
     b.real_time = True
     b.use_directions = False
 
-    b.base = 10
+    b.bars = 1
     b.i = [BassDrum1, BassDrum1, S, S, S]
 
     #
@@ -107,7 +107,7 @@ def set_style_54():
     instrument = "drums_snare"
     b.real_time = True
 
-    b.base = 10
+    b.bars = 1
     b.i = [S, S, S, ElectricSnare, S]
 
     #
@@ -116,7 +116,7 @@ def set_style_54():
 
     instrument = "drums_hiride"
 
-    b.base = 10
+    b.bars = 1
     b.i = [ClosedHiHat, S, PedalHiHat, S, ClosedHiHat, S, PedalHiHat, S,
            OpenHiHat, S]
     build()
@@ -129,7 +129,8 @@ def set_style_54():
     #
 
     instrument = "drums_mixed"
+    b.real_time = False
 
-    base = 20
+    b.bars = 2
     b.i = [LowFloorTom, ElectricSnare] * 10
     build()
