@@ -692,7 +692,8 @@ def test_composer(out="out.mid"):
     composer.compose()
 
 
-def test_compose():
+def run_tests():
+    print("Tests: ")
     # test_scales("test0.mid")
     # test_drums_simple("test1.mid")
     # test_sequencer_simple("test2.mid")

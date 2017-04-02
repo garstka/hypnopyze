@@ -36,4 +36,4 @@ class StyleManager:
 
     # Reseeds the prng
     def reseed(self, seed):
-        self.__prng = RandomState(hash(seed))
+        self.__prng.seed(abs(hash(seed)) % (2 ** 32))
