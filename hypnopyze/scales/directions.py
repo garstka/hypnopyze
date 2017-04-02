@@ -1,11 +1,6 @@
 from typing import List
 from numpy.random import RandomState
-
-
-# Returns true, if the note represents silence in a list of directions.
-def is_silence_directions(index):
-    return not STAY <= index <= NEXT_DOWN
-
+from hypnopyze.notes import *
 
 # directions for generating scale walks for patterns
 
@@ -37,7 +32,7 @@ NEXT_DOWN = 12  # switch to NEXT_ROOT -> ROOT_DOWN
 # or the imperfect algorithm failed (for now).
 def directions_to_walk(indices,
                        scale_size: int,
-                       prng: RandomState) -> List[int]:
+                       prng: RandomState):
     #
     # Example:
     # for
@@ -142,7 +137,7 @@ def directions_to_walk(indices,
         this_index = new_indices[i]
 
         # ignore silence
-        if is_silence_directions(this_index):
+        if this_index == SILENCE:
             continue
 
         new_indices[i] = this_index - last_index

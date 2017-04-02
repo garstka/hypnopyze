@@ -42,6 +42,21 @@ OCTAVE_COUNT = 11
 
 DEFAULT_OCTAVE = OCTAVE_5
 
+# special pattern elements
+
+SILENCE = -256
+S = SILENCE
+
+
+# Returns true, if the note represents silence.
+def is_silence(note):
+    return not (0 <= note <= MAX_NOTE)
+
+
+# Returns true, if the index represents silence in a scale walk.
+def is_silence_walk(index):
+    return index == SILENCE
+
 
 # Note in an octave.
 # Note must be checked if it's good before being used.

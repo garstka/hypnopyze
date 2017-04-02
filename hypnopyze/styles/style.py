@@ -36,6 +36,8 @@ class Style:
         self.octave_shift_prob = 0.5
         self.octave_shifts = [-1]
 
+        self.octave_shift_rhythm = False
+
         #
         # speed and structure
         #

@@ -31,6 +31,7 @@ class PianoPlayer:
 
         collection = sm.pattern_collection
 
+        is_rhythm = [False, True]
         patterns = [collection.patterns("lead"),
                     collection.patterns("rhythm")]
 
@@ -50,6 +51,9 @@ class PianoPlayer:
 
             def rand():  # fetches a pattern
                 chosen = pattern_list[prng.choice(pattern_count)]
+
+                if is_rhythm[i] and not style.octave_shift_rhythm:
+                    return chosen
 
                 # perform an octave shift according to the probability
                 do_octave_shift = prng.binomial(1, style.octave_shift_prob)

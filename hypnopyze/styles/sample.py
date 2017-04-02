@@ -14,6 +14,7 @@ def style_54():
     style.use_drums = True
 
     style.lead = AcousticGrandPiano
+    style.rhythm = ElectricBass_finger
 
     style.base_beats_per_bar = 5
 
@@ -42,6 +43,7 @@ def set_style_54(style: Style):
     StyleManager().style = style
 
     build_lead_basic54(b)
+    build_rhythm_basic54(b)
     build_drums_bass_basic54(b)
     build_drums_hi_ride_basic54(b)
     build_drums_mixed_basic54(b)

@@ -3,22 +3,6 @@ from hypnopyze.scales.walker import *
 from hypnopyze.scales.directions import directions_to_walk
 from math import ceil
 
-# special pattern elements
-
-SILENCE = -256
-S = SILENCE
-
-
-# Returns true, if the note represents silence.
-def is_silence(note):
-    return not (0 <= note <= MAX_NOTE)
-
-
-# Returns true, if the index represents silence in a scale walk.
-def is_silence_walk(index):
-    return index == SILENCE
-
-
 # velocities
 
 L = 30  # light

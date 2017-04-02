@@ -2,6 +2,7 @@ from hypnopyze.patterns.builder import PatternBuilder
 from hypnopyze.scales.directions import *
 from hypnopyze.patterns.pattern import *
 from hypnopyze.drums import *
+from hypnopyze.instruments import *
 
 
 # Builds and registers basic lead patterns.
@@ -10,6 +11,7 @@ def build_lead_basic54(builder: PatternBuilder):
 
     b.instrument = "lead"
     b.use_directions = True
+    b.base_octave = DEFAULT_OCTAVE
 
     b.bars = 1
     b.i = [STAY, STAY, STAY, ROOT_DOWN, STAY]
@@ -23,6 +25,24 @@ def build_lead_basic54(builder: PatternBuilder):
     b.bars = 1
     b.i = [STAY, NEXT, NEXT, NEXT, NEXT_ROOT]
     b.v = [H, M, M, M, H]
+    b.d = []
+    b.repeat = True
+    b.real_time = True
+
+    b.build_and_register()
+
+
+# Builds and registers basic rhythm patterns.
+def build_rhythm_basic54(builder: PatternBuilder):
+    b = builder
+
+    b.instrument = "rhythm"
+    b.use_directions = True
+    b.base_octave = DEFAULT_OCTAVE - 1
+
+    b.bars = 2
+    b.i = [ROOT, ROOT, ROOT, PREV_UP, STAY, STAY, STAY, NEXT_UP, STAY, 0]
+    b.v = []
     b.d = []
     b.repeat = True
     b.real_time = True
