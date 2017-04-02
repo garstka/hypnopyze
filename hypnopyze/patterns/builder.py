@@ -8,7 +8,7 @@ from hypnopyze.notes import *
 class PatternBuilder:
     def __init__(self):
         #
-        # intermediate  pattern data
+        # intermediate pattern data
         #
 
         self.name = ""
@@ -57,6 +57,13 @@ class PatternBuilder:
 
         self.patterns = []
 
+        #
+        # register
+        #
+
+        # instrument name for registering with the style manager
+        self.instrument = "lead"
+
     # Builds the patterns. Returns the number of patterns built.
     def build(self) -> int:
 
@@ -98,3 +105,15 @@ class PatternBuilder:
 
         self.patterns.extend(sounds)
         return len(sounds)
+
+    # Registers the built patterns with the StyleManager
+    def register(self):
+        if not self.patterns:
+            print("No patterns to register.")
+        else:
+            StyleManager().pattern_collection.add_patterns(self.instrument,
+                                                           self.patterns)
+            self.patterns.clear()
+
+    def build_and_register(self):
+        self.build() and self.register()

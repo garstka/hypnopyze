@@ -98,7 +98,6 @@ class Sequencer:
         prng = StyleManager().prng
 
         time_scale = self.time_scale(pattern)
-        # bar_count = self.bar_count(pattern)
         bar_count = pattern.bars
 
         fill = pattern.real_time and self.repeatable(pattern)
