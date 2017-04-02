@@ -23,7 +23,7 @@ def set_style_54():
     style = Style()
 
     style.use_lead = True
-    # style.use_rhythm = False
+    style.use_rhythm = True
     style.use_drums = True
 
     style.lead = AcousticGrandPiano
@@ -63,8 +63,7 @@ def set_style_54():
     b.key = style.key
 
     # b.scale = [A, C, D, E, G]
-    # b.octaves = [DEFAULT_OCTAVE, DEFAULT_OCTAVE - 2]
-    b.octaves = [DEFAULT_OCTAVE, DEFAULT_OCTAVE - 1]
+    b.base_octave = DEFAULT_OCTAVE
 
     b.bars = 1
     b.i = [STAY, STAY, STAY, ROOT_DOWN, STAY]

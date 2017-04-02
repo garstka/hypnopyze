@@ -23,9 +23,7 @@ class Style:
 
         self.base_beats_per_bar = 5  # base beats per bar
 
-        # multiplier
-
-        self.resolution = 4
+        self.resolution = 4  # multiplier
 
         #
         # key
@@ -33,8 +31,19 @@ class Style:
 
         self.key = E
 
+        # pattern octave shifts mid-song
+
+        self.octave_shift_prob = 0.5
+        self.octave_shifts = [-1]
+
+        #
+        # speed and structure
+        #
+
         self.bpm = 120
         self.bar_group = 4
+
+        # self.silent_bars_at_end = 0.5
 
         #
         # velocity perturbation per instrument
@@ -44,12 +53,7 @@ class Style:
         self.rhythm_perturb = 10
 
         self.bass_perturb = 20
-        self.stick_perturb = 10
-        self.snare_perturb = 10
-        self.toms_perturb = 40
-        self.ride_perturb = 40
-        self.hi_hat_perturb = 40
-        self.crash_perturb = 40
+        self.hi_ride_perturb = 40
         self.mixed_perturb = 10
 
         #

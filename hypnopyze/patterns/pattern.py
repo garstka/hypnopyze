@@ -58,10 +58,13 @@ DEFAULT_VELOCITY = MAX_VELOCITY
 DEFAULT_DURATION = 1
 
 
-# A sequence of offsets within a scale / sounds to be played.
+# A sequence of indices:
+#  - directions for building a scale walk, or
+#  - a scale walk: offsets within a scale, or
+#  - sounds to be played (usable for MIDI output)/
 class Pattern:
-    # - bars - how many bars does the pattern represent
-    # - indices - a sequence of integers (offsets or sounds)
+    # - bars - how many bars the pattern represents
+    # - indices - a sequence of integers (directions/offsets/sounds)
     # - velocity - velocity for each note
     # - duration - duration for each note
     # - real_time - if true, pattern won't be upscaled to fit the entire bar,
@@ -252,7 +255,28 @@ class Pattern:
                        self.repeatable,
                        self.real_time)
 
-    # min_beats_per_bar - minimum compatible beats per bar (minimum resolution)
+    # If this is a sound pattern, returns the same pattern,
+    # but octave-shifted.
+    def octave_shifted(self, shift: int):
+        new_indices = []
+        for i in self.indices:
+
+            # ignore silence
+            if is_silence_walk(i):
+                new_indices.append(i)
+                continue
+
+            new_indices.append(shift * BASE_NOTE_COUNT + i)
+
+        return Pattern(self.name,
+                       self.bars,
+                       new_indices,
+                       self.velocity,
+                       self.duration,
+                       self.repeatable,
+                       self.real_time)
+
+    # Returns the minimum compatible beats per bar (minimum resolution)
     @property
     def min_beats_per_bar(self):
         return int(ceil(self.beats / self.bars))

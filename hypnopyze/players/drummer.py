@@ -16,25 +16,24 @@ class Drummer:
         self.bar_group = style.bar_group
 
         # bass - beat or timing element with basic pulse patterns
-        self.seq_bass = Sequencer(self.beats_per_bar, style.bass_perturb)
-        self.seq_bass.channel = CHANNEL_DRUMS
-        self.seq_bass.time = start_time
+        self.__seq_bass = Sequencer(self.beats_per_bar, style.bass_perturb)
+        self.__seq_bass.channel = CHANNEL_DRUMS
+        self.__seq_bass.time = start_time
 
         # ride - constant-rhythm pattern
         # & hi-hat - similar to ride, not at the same time
         # & crash - accent markers, major changes
-        self.seq_hi_ride = Sequencer(self.beats_per_bar, style.ride_perturb)
-        self.seq_hi_ride.channel = CHANNEL_DRUMS
-        self.seq_hi_ride.time = start_time
+        self.__seq_hi_ride = Sequencer(self.beats_per_bar,
+                                       style.hi_ride_perturb)
+        self.__seq_hi_ride.channel = CHANNEL_DRUMS
+        self.__seq_hi_ride.time = start_time
 
         # mixed, sequential
         # snare - regular accents, fills
         # & tom - fills and solos
-        self.seq_mixed = Sequencer(self.beats_per_bar, style.mixed_perturb)
-        self.seq_mixed.channel = CHANNEL_DRUMS
-        self.seq_mixed.time = start_time
-
-        self.filler = []
+        self.__seq_mixed = Sequencer(self.beats_per_bar, style.mixed_perturb)
+        self.__seq_mixed.channel = CHANNEL_DRUMS
+        self.__seq_mixed.time = start_time
 
     def play(self, bar_groups):
 
@@ -46,9 +45,9 @@ class Drummer:
                     collection.patterns("drums_mixed"),
                     collection.patterns("drums_hi_ride")]
 
-        seqs = [self.seq_bass,
-                self.seq_mixed,
-                self.seq_hi_ride]
+        seqs = [self.__seq_bass,
+                self.__seq_mixed,
+                self.__seq_hi_ride]
 
         total_time = bar_groups * self.bar_group * self.beats_per_bar
         for i in range(0, len(patterns)):
@@ -77,6 +76,6 @@ class Drummer:
     # Returns all the tracks
     @property
     def tracks(self):
-        return [l for l in [self.seq_bass.notes,
-                            self.seq_hi_ride.notes,
-                            self.seq_mixed.notes] if l]
+        return [l for l in [self.__seq_bass.notes,
+                            self.__seq_hi_ride.notes,
+                            self.__seq_mixed.notes] if l]
