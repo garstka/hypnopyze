@@ -45,6 +45,9 @@ class Drummer:
                     collection.patterns("drums_mixed"),
                     collection.patterns("drums_hi_ride")]
 
+        # for i, p in enumerate(patterns):
+        #    print("Drum collection ", i, ": ", len(p))
+
         seqs = [self.__seq_bass,
                 self.__seq_mixed,
                 self.__seq_hi_ride]

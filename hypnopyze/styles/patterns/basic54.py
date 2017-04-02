@@ -15,7 +15,7 @@ def build_lead_basic54(builder: PatternBuilder):
 
     b.bars = 1
     b.i = [STAY, STAY, STAY, ROOT_DOWN, STAY]
-    b.v = [H, M, M, M, M]
+    b.v = []
     b.d = []
     b.repeat = True
     b.real_time = False

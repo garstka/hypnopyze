@@ -1,6 +1,7 @@
 from hypnopyze.notes import *
 from hypnopyze.instruments import *
 from hypnopyze.drums import CHANNEL_DRUMS
+from hypnopyze.scales.blueprint import *
 
 
 # General parameters for music generation.
@@ -30,6 +31,7 @@ class Style:
         #
 
         self.key = E
+        self.scale = MajorScale
 
         # pattern octave shifts mid-song
 

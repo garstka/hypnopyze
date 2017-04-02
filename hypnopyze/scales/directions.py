@@ -28,7 +28,7 @@ NEXT_DOWN = 12  # switch to NEXT_ROOT -> ROOT_DOWN
 # returns a scale walk (relative offsets within a scale)
 #  - scale walk is for this scale size
 #  - may produce different results each time, as it uses a PRNG
-# Returns None if the directions are invalid for a scale of this size,
+# Returns [] if the directions are invalid for a scale of this size,
 # or the imperfect algorithm failed (for now).
 def directions_to_walk(indices,
                        scale_size: int,
@@ -43,7 +43,7 @@ def directions_to_walk(indices,
     # walk offsets: [0, 1, 2, -1, -1, 3, -4]
 
     if scale_size == 0:
-        return None
+        return []
 
     new_indices = []
     current_offset = 0
@@ -92,7 +92,7 @@ def directions_to_walk(indices,
             top = next_root() - 1
             bottom = current_offset + 1
             if bottom > top:
-                return None  # can be fixed, perhaps
+                return []  # can be fixed, perhaps
 
             off = rand_nonzero(top - bottom + 1)
             current_offset = bottom - 1 + off
@@ -102,7 +102,11 @@ def directions_to_walk(indices,
             top = current_offset - 1
             bottom = current_root() + 1
             if bottom > top:
-                return None  # can be fixed, perhaps
+
+                if current_offset == current_root():
+                    print("Invalid directions: can't go DOWN from root")
+
+                return []  # can be fixed, perhaps
 
             off = rand_nonzero(top - bottom + 1)
             current_offset = top + 1 - off
@@ -119,7 +123,7 @@ def directions_to_walk(indices,
             bottom = prev_root() + 1
 
             if bottom > top:
-                return None  # can be fixed, perhaps
+                return []  # can be fixed, perhaps
 
             off = rand_nonzero(top - bottom + 1)
             current_offset = top + 1 - off

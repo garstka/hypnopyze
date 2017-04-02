@@ -32,6 +32,8 @@ def main():
     style = style_54()
 
     style.key = key_to_int[args.key]
+    # style.scale = PhrygianDominant
+    # style.lead = Lead7_fifths
 
     if args.seed:
         StyleManager().reseed(args.seed)

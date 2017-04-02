@@ -35,6 +35,9 @@ class PianoPlayer:
         patterns = [collection.patterns("lead"),
                     collection.patterns("rhythm")]
 
+        # for i, p in enumerate(patterns):
+        #    print("Piano collection ", i, ": ", len(p))
+
         seqs = [self.__seq_lead,
                 self.__seq_rhythm]
 

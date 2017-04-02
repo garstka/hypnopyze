@@ -3,6 +3,7 @@ from hypnopyze.instruments import *
 from hypnopyze.drums import *
 from hypnopyze.styles.manager import *
 from .patterns.basic54 import *
+from .patterns.ext54 import *
 
 
 # Returns a style for the 5/4 signature (for customization before set_style_54)
@@ -37,7 +38,7 @@ def set_style_54(style: Style):
     b.num_walks = 20
     b.key = style.key
 
-    # b.scale = [A, C, D, E, G]
+    b.scale = style.scale
     b.base_octave = DEFAULT_OCTAVE
 
     StyleManager().style = style
@@ -47,3 +48,9 @@ def set_style_54(style: Style):
     build_drums_bass_basic54(b)
     build_drums_hi_ride_basic54(b)
     build_drums_mixed_basic54(b)
+
+    build_lead_ext4(b)
+    build_rhythm_ext54(b)
+    build_drums_bass_ext54(b)
+    build_drums_hi_ride_ext54(b)
+    build_drums_mixed_ext54(b)

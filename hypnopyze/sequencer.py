@@ -135,6 +135,10 @@ class Sequencer:
                 # update the time
                 t += full_step
 
-        self.__t = t
+        lower_bound = bar_count * self.beats_per_bar
+        if t - self.__t >= lower_bound:
+            self.__t = t
+        else:
+            self.__t += lower_bound
 
         return bar_count
