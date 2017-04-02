@@ -1,4 +1,5 @@
 from hypnopyze.patterns.builder import PatternBuilder
+from hypnopyze.scales.directions import *
 from hypnopyze.patterns.pattern import *
 from hypnopyze.drums import *
 
