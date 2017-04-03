@@ -74,6 +74,9 @@ def main():
     parser.add_argument("-t", "--test", help="run tests",
                         action="store_true")
 
+    parser.add_argument("--alt", choices=["future", "saw5", "callcenter"],
+                        help="choose an alternative instrument set")
+
     args = parser.parse_args()
 
     key_to_int = {"C": C, "C#": Cs, "D": D, "D#": Ds, "E": E,
@@ -92,8 +95,16 @@ def main():
 
     style = style_54()
 
-    # style.lead = Lead7_fifths
-    # style.rhythm = Lead2_sawtooth
+    if args.alt:
+        if args.alt == "future":
+            style.lead = ElectricGrandPiano
+            style.rhythm = Lead2_sawtooth
+        elif args.alt == "saw5":
+            style.lead = Lead2_sawtooth
+            style.rhythm = Lead7_fifths
+        elif args.alt == "callcenter":
+            style.lead = TelephoneRing
+            style.rhythm = Lead2_sawtooth
 
     style.key = key_to_int[args.key]
 
