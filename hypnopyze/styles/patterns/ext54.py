@@ -50,7 +50,7 @@ def build_lead_ext4(builder: PatternBuilder):
     b.repeat = True
     b.real_time = True
 
-    # b.build_and_register()
+    b.build_and_register()
 
     # b.bars = 1
     # b.name = "bad1"
@@ -94,8 +94,18 @@ def build_lead_ext4(builder: PatternBuilder):
 
     b.build_and_register()
 
+    b.bars = 1
+    b.name = "ff"
+    b.i = [STAY, STAY, NEXT_DOWN, STAY, STAY, PREV_UP, STAY, UP, STAY, STAY]
+    b.v = []
+    b.d = []
+    b.repeat = True
+    b.real_time = True
 
-# Builds and registers basic rhythm patterns.
+    b.build_and_register()
+
+
+# More rhythm
 def build_rhythm_ext54(builder: PatternBuilder):
     b = builder
 
@@ -103,15 +113,15 @@ def build_rhythm_ext54(builder: PatternBuilder):
     b.use_directions = True
     b.base_octave = DEFAULT_OCTAVE - 1
 
-    b.bars = 2
-    b.name = "downwards"
-    b.i = [ROOT_DOWN, STAY, STAY, STAY, STAY, DOWN, PREV, ROOT, S, S]
-    b.v = []
-    b.d = []
-    b.repeat = True
-    b.real_time = True
-
-    b.build_and_register()
+    # b.bars = 2
+    # b.name = "downwards"
+    # b.i = [ROOT_DOWN, STAY, STAY, STAY, STAY, DOWN, PREV, ROOT, S, S]
+    # b.v = []
+    # b.d = []
+    # b.repeat = True
+    # b.real_time = True
+    #
+    # b.build_and_register()
 
     # b.bars = 2
     # b.name = "downwards"
@@ -164,7 +174,7 @@ def build_drums_bass_ext54(builder: PatternBuilder):
     b.build_and_register()
 
 
-# Builds and registers basic hi-hat / ride patterns.
+# More hi/ride
 def build_drums_hi_ride_ext54(builder: PatternBuilder):
     b = builder
 

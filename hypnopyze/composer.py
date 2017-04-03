@@ -10,18 +10,22 @@ class Composer:
     def __init__(self, out_file: str = "out.mid"):
         self.__mt = MIDITime(StyleManager().style.bpm, out_file)
 
-    def compose(self):
+        self.drummer = Drummer()
+        self.player = PianoPlayer()
 
-        drummer = Drummer()
-        player = PianoPlayer()
+    def compose(self, bar_groups: int = 4):
 
-        drummer.play(4)
-        player.play(4)
+        self.drummer.play(bar_groups)
+        self.player.play(bar_groups)
 
-        for notes in drummer.tracks:
+    def save(self):
+
+        tracks = self.drummer.tracks + self.player.tracks
+
+        for notes in tracks:
             self.__mt.add_track(notes)
 
-        for notes in player.tracks:
-            self.__mt.add_track(notes)
-
-        save_midi(self.__mt, StyleManager().style.instruments_per_channel)
+        if tracks:
+            save_midi(self.__mt, StyleManager().style.instruments_per_channel)
+        else:
+            save_midi(self.__mt)  # empty

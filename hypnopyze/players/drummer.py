@@ -2,6 +2,7 @@ from hypnopyze.drums import *
 from hypnopyze.patterns import *
 from hypnopyze.sequencer import *
 from hypnopyze.styles.manager import StyleManager
+from hypnopyze.players.restrict_pattern_set import restrict_pattern_set
 
 
 class Drummer:
@@ -39,6 +40,7 @@ class Drummer:
 
         sm = StyleManager()
         prng = sm.prng
+        style = sm.style
         collection = sm.pattern_collection
 
         patterns = [collection.patterns("drums_bass"),
@@ -55,7 +57,9 @@ class Drummer:
         total_time = bar_groups * self.bar_group * self.beats_per_bar
         for i in range(0, len(patterns)):
 
-            pattern_list = patterns[i]
+            pattern_list = restrict_pattern_set(patterns[i],
+                                                style.drums_amount,
+                                                prng)
             seq = seqs[i]
 
             pattern_count = len(pattern_list)

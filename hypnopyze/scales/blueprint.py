@@ -3,12 +3,18 @@ from hypnopyze.notes import *
 
 # some blueprints
 
-MajorScale = [C, D, E, F, G, A, B]
 MajorPentatonic = [E, Fs, Gs, B, Cs]
 MinorPentatonic = [E, G, A, B, D]
-PhrygianMode = [E, F, G, A, B, C, D, E]
+PhrygianMode = [E, F, G, A, B, C, D]
 DoubleHarmonic = [E, F, Gs, A, B, C, D]
 PhrygianDominant = [C, Df, E, F, G, Af, Bf]
+
+MajorScale = [C, D, E, F, G, A, B]  # i.e. ionian mode
+LydianMode = [F, G, A, B, C, D, E]  # major
+MixolydianMode = [G, A, B, C, D, E, F]  # major
+DorianMode = [D, E, F, G, A, B, C]  # minor
+AeolianMode = [A, B, C, D, E, F, G]  # minor
+LocrianMode = [B, C, D, E, F, G, A]  # diminished
 
 
 # Acts as a blueprint for a full scale.

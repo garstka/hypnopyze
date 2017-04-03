@@ -1,6 +1,7 @@
 from hypnopyze.sequencer import *
 from hypnopyze.instruments import *
 from hypnopyze.styles.manager import *
+from hypnopyze.players.restrict_pattern_set import restrict_pattern_set
 
 
 class PianoPlayer:
@@ -35,6 +36,9 @@ class PianoPlayer:
         patterns = [collection.patterns("lead"),
                     collection.patterns("rhythm")]
 
+        amount = [style.lead_amount,
+                  style.rhythm_amount]
+
         # for i, p in enumerate(patterns):
         #    print("Piano collection ", i, ": ", len(p))
 
@@ -44,7 +48,9 @@ class PianoPlayer:
         total_time = bar_groups * self.bar_group * self.beats_per_bar
         for i in range(0, len(patterns)):
 
-            pattern_list = patterns[i]
+            pattern_list = pattern_list = restrict_pattern_set(patterns[i],
+                                                               amount[i],
+                                                               prng)
             seq = seqs[i]
 
             pattern_count = len(pattern_list)

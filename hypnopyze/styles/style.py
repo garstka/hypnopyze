@@ -35,7 +35,7 @@ class Style:
 
         # pattern octave shifts mid-song
 
-        self.octave_shift_prob = 0.5
+        self.octave_shift_prob = 0.2
         self.octave_shifts = [-1]
 
         self.octave_shift_rhythm = False
@@ -48,6 +48,11 @@ class Style:
         self.bar_group = 4
 
         # self.silent_bars_at_end = 0.5
+
+        # for narrowing down the number of patterns per song
+        self.lead_amount = 1.0
+        self.rhythm_amount = 1.0
+        self.drums_amount = 1.0
 
         #
         # velocity perturbation per instrument
